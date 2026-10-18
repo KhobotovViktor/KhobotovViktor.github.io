@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Не в тот чат! 💬 — Интерактивное Демо</title>
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --surface: #1e293b;
+      --surface-variant: #334155;
+      --accent-blue: #38bdf8;
+      --accent-cyan: #06b6d4;
+      --bubble-self: #2563eb;
+      --bubble-other: #1e293b;
+      --bubble-npc: #312e81;
+      --gold: #f59e0b;
+      --red: #ef4444;
+      --green: #10b981;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: #020617;
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Мобильный фрейм смартфона */
+    .phone-container {
+      width: 100%;
+      max-width: 440px;
+      height: 100vh;
+      max-height: 900px;
+      background: var(--bg-dark);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+      border-radius: 24px;
+      overflow: hidden;
+      border: 2px solid #1e293b;
+    }
+
+    /* Верхний бар чата */
+    .chat-header {
+      background: var(--surface);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--surface-variant);
+      z-index: 10;
+    }
+
+    .header-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--accent-blue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .header-text h1 {
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .header-text p {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .round-badge {
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent-blue);
+      padding: 4px 8px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    /* Баннер аномалии */
+    .anomaly-banner {
+      background: rgba(139, 92, 246, 0.2);
+      border-bottom: 1px solid rgba(139, 92, 246, 0.4);
+      padding: 6px 14px;
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #c4b5fd;
+      font-weight: 600;
+      animation: pulse 2s infinite;
+    }
+
+    /* Закрепленное сообщение */
+    .pinned-bar {
+      background: rgba(245, 158, 11, 0.15);
+      border-bottom: 1px solid rgba(245, 158, 11, 0.3);
+      padding: 6px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+    }
+
+    .pinned-bar span {
+      color: var(--gold);
+      font-weight: 700;
+    }
+
+    /* Лента чата */
+    .chat-feed {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* Пузыри сообщений */
+    .message-row {
+      display: flex;
+      flex-direction: column;
+      max-width: 82%;
+    }
+
+    .message-row.self {
+      align-self: flex-end;
+    }
+
+    .message-row.other {
+      align-self: flex-start;
+    }
+
+    .message-author {
+      font-size: 11px;
+      font-weight: 600;
+      margin-bottom: 3px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .message-bubble {
+      padding: 10px 14px;
+      border-radius: 16px;
+      font-size: 14px;
+      line-height: 1.4;
+      position: relative;
+      background: var(--surface);
+      border: 1px solid var(--surface-variant);
+    }
+
+    .message-row.self .message-bubble {
+      background: var(--bubble-self);
+      border: none;
+      color: #fff;
+    }
+
+    .message-row.npc .message-bubble {
+      background: var(--bubble-npc);
+      border: 1px solid #4338ca;
+    }
+
+    .message-bubble.pinned {
+      border: 2px solid var(--gold);
+    }
+
+    .message-bubble.bribe {
+      border: 2px solid var(--gold);
+      box-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
+    }
+
+    /* Спойлер */
+    .spoiler {
+      background: #475569;
+      color: transparent;
+      border-radius: 4px;
+      padding: 2px 4px;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.3s;
+    }
+
+    .spoiler.revealed {
+      background: transparent;
+      color: inherit;
+    }
+
+    /* Реакции под пузырем */
+    .reactions-bar {
+      display: flex;
+      gap: 4px;
+      margin-top: 6px;
+    }
+
+    .reaction-pill {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--surface-variant);
+      border-radius: 10px;
+      padding: 2px 6px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    /* Баннер бунта (Массовый репорт) */
+    .revolt-banner {
+      background: rgba(239, 68, 68, 0.2);
+      border: 2px solid var(--red);
+      border-radius: 14px;
+      padding: 10px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 8px 12px;
+      animation: pulse-red 0.8s infinite alternate;
+    }
+
+    .revolt-btn {
+      background: var(--red);
+      color: #fff;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* Нижняя панель черновиков Т9 */
+    .keyboard-panel {
+      background: var(--surface);
+      border-top: 1px solid var(--surface-variant);
+      padding: 10px 12px;
+    }
+
+    .input-preview {
+      background: #0f172a;
+      border-radius: 18px;
+      padding: 8px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      border: 1px solid var(--surface-variant);
+    }
+
+    .input-preview-text {
+      font-size: 13px;
+      color: var(--text-muted);
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      flex: 1;
+    }
+
+    .input-preview-text.active {
+      color: var(--text);
+    }
+
+    .action-icons {
+      display: flex;
+      gap: 6px;
+    }
+
+    .icon-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: none;
+      background: var(--surface-variant);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+
+    .icon-btn.send {
+      background: var(--accent-blue);
+    }
+
+    .icon-btn.bribe.active {
+      background: var(--gold);
+    }
+
+    .drafts-scroll {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .draft-chip {
+      background: #0f172a;
+      border: 1px solid var(--surface-variant);
+      border-radius: 12px;
+      padding: 8px 12px;
+      min-width: 130px;
+      max-width: 190px;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+
+    .draft-chip.selected {
+      border-color: var(--accent-blue);
+      background: #1e293b;
+    }
+
+    .draft-category {
+      font-size: 9px;
+      color: var(--accent-cyan);
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .draft-text {
+      font-size: 11px;
+      color: var(--text);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* Модальное окно */
+    .modal-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.75);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 100;
+    }
+
+    .modal-card {
+      background: var(--surface);
+      border: 2px solid var(--accent-cyan);
+      border-radius: 20px;
+      padding: 20px;
+      width: 100%;
+      max-width: 360px;
+      text-align: center;
+    }
+
+    .modal-btn {
+      background: var(--accent-blue);
+      color: #fff;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-weight: 700;
+      width: 100%;
+      cursor: pointer;
+      margin-top: 12px;
+    }
+
+    @keyframes pulse-red {
+      from { transform: scale(1); }
+      to { transform: scale(1.02); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="phone-container">
+    <!-- Header -->
+    <div class="chat-header">
+      <div class="header-info">
+        <div class="header-avatar">💬</div>
+        <div class="header-text">
+          <h1>Не в тот чат! #X9K2L</h1>
+          <p id="sub-status">Админ: @Начальник_Чеха • 4 в сети</p>
+        </div>
+      </div>
+      <div class="round-badge" id="round-number">РАУНД 1</div>
+    </div>
+
+    <!-- Аномалия -->
+    <div class="anomaly-banner" id="anomaly-bar">
+      <span>⚡</span>
+      <span id="anomaly-text">Слоумод / Блиц: На ответ дается 10 секунд!</span>
+    </div>
+
+    <!-- Пин бар -->
+    <div class="pinned-bar" id="pinned-bar" style="display: none;">
+      <span>📌 Закреплено:</span>
+      <span id="pinned-snippet" style="color: var(--text); font-weight: normal; margin-left: 4px;">...</span>
+    </div>
+
+    <!-- Лента чата -->
+    <div class="chat-feed" id="feed">
+      <!-- NPC Сообщение -->
+      <div class="message-row other npc">
+        <div class="message-author" style="color: var(--accent-cyan);">🤖 Вброс: Начальник</div>
+        <div class="message-bubble">
+          @Вы, зайдите ко мне в кабинет прямо сейчас. И захватите с собой объяснительную по поводу вчерашнего инцидента с кулером!
+        </div>
+      </div>
+    </div>
+
+    <!-- Бунт (Репорт) -->
+    <div class="revolt-banner" id="revolt-banner" style="display: none;">
+      <div>
+        <div style="font-weight: 800; font-size: 12px; color: var(--red);">🚨 КРИНЖ-АТАКА! БУНТ ЧАТА (4 сек)</div>
+        <div style="font-size: 10px; color: var(--text-muted);" id="revolt-counter">Собрано голосов: 2 из 3</div>
+      </div>
+      <button class="revolt-btn" id="revolt-btn" onclick="triggerRevolt()">РЕПОРТ 🚨</button>
+    </div>
+
+    <!-- Клавиатура черновиков Т9 -->
+    <div class="keyboard-panel">
+      <div class="input-preview">
+        <span class="input-preview-text" id="preview-text">Выберите шаблон ответа ниже...</span>
+        <div class="action-icons">
+          <button class="icon-btn bribe" id="bribe-btn" title="Донат Админу (Золотая VIP-рамка)" onclick="toggleBribe()">💰</button>
+          <button class="icon-btn" title="Слепой вброс Т9 (x2 очков)" onclick="blindShot()">🎲</button>
+          <button class="icon-btn send" title="Отправить" onclick="sendSelectedDraft()">➤</button>
+        </div>
+      </div>
+
+      <div style="font-size: 10px; color: var(--text-muted); margin-bottom: 4px; font-weight: 600;">Черновики Т9:</div>
+      <div class="drafts-scroll" id="drafts-container">
+        <!-- Генерируется через JS -->
+      </div>
+    </div>
+
+    <!-- Модалка кубика / дуэли -->
+    <div class="modal-overlay" id="modal" style="display: none;">
+      <div class="modal-card">
+        <div style="font-size: 32px; margin-bottom: 8px;">🎲</div>
+        <h2 style="font-size: 16px; margin-bottom: 6px;">Дуэль на кубиках за шаблон!</h2>
+        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 14px;">
+          Вы и @Артем_Тимлид выбрали один и тот же шаблон ответа!
+        </p>
+        <div style="display: flex; justify-content: space-around; font-size: 14px; font-weight: 800; margin: 10px 0;">
+          <div>Вы: <span id="dice-p1" style="color: var(--accent-cyan); font-size: 24px;">⚄ 5</span></div>
+          <div style="color: var(--text-muted);">VS</div>
+          <div>Бот: <span id="dice-p2" style="color: var(--gold); font-size: 24px;">⚂ 3</span></div>
+        </div>
+        <div style="color: var(--green); font-size: 12px; font-weight: 700;" id="dice-winner">
+          🏆 Победа! Шаблон остается у вас!
+        </div>
+        <button class="modal-btn" onclick="closeModal()">Продолжить игру</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Демо-данные шаблонов
+    const drafts = [
+      { id: "d1", cat: "Оправдания", text: "Да я просто за хлебом вышел, само как-то получилось...", tier: "standard" },
+      { id: "d2", cat: "Дерзость", text: "Скинь 500 рублей на карту и я сделаю вид, что сообщения не было.", tier: "gradient" },
+      { id: "d3", cat: "Паника", text: "Товарищ майор, удалите переписку, это для школьного реферата!", tier: "neon" },
+      { id: "d4", cat: "Кринж", text: "Это не я, меня загипнотизировали цыгане-астрологи!", tier: "standard" },
+      { id: "d5", cat: "Сарказм", text: "Поздравляю, вы выиграли супер-приз: мое полное безразличие.", tier: "gradient" }
+    ];
+
+    let selectedDraft = null;
+    let isBribeActive = false;
+    let round = 1;
+
+    // Отрисовка шаблонов в ленте клавиатуры
+    const container = document.getElementById('drafts-container');
+    drafts.forEach(d => {
+      const chip = document.createElement('div');
+      chip.className = 'draft-chip';
+      chip.innerHTML = `
+        <div class="draft-category">${d.cat}</div>
+        <div class="draft-text">${d.text}</div>
+      `;
+      chip.onclick = () => selectDraft(d, chip);
+      container.appendChild(chip);
+    });
+
+    function selectDraft(draft, chipEl) {
+      selectedDraft = draft;
+      document.querySelectorAll('.draft-chip').forEach(c => c.classList.remove('selected'));
+      chipEl.classList.add('selected');
+      const preview = document.getElementById('preview-text');
+      preview.innerText = draft.text;
+      preview.classList.add('active');
+    }
+
+    function toggleBribe() {
+      isBribeActive = !isBribeActive;
+      document.getElementById('bribe-btn').classList.toggle('active', isBribeActive);
+    }
+
+    function blindShot() {
+      const randomDraft = drafts[Math.floor(Math.random() * drafts.length)];
+      selectedDraft = randomDraft;
+      sendSelectedDraft(true);
+    }
+
+    function sendSelectedDraft(isBlind = false) {
+      if (!selectedDraft) return;
+      const feed = document.getElementById('feed');
+
+      // Сообщение игрока
+      const row = document.createElement('div');
+      row.className = 'message-row self';
+      const bribeClass = isBribeActive ? 'bribe' : '';
+      const blindText = isBlind ? ' [🎲 СЛЕПОЙ ВБРОС x2]' : '';
+      
+      row.innerHTML = `
+        <div class="message-author">Вы ${isBribeActive ? '• 💰 VIP Донат' : ''}${blindText}</div>
+        <div class="message-bubble ${bribeClass}">
+          ${selectedDraft.text}
+          <div class="reactions-bar">
+            <span class="reaction-pill" onclick="addReaction(this)">🔥 1</span>
+            <span class="reaction-pill" onclick="addReaction(this)">😂</span>
+          </div>
+        </div>
+      `;
+      feed.appendChild(row);
+      feed.scrollTop = feed.scrollHeight;
+
+      // Сброс
+      selectedDraft = null;
+      isBribeActive = false;
+      document.getElementById('bribe-btn').classList.remove('active');
+      document.getElementById('preview-text').innerText = "Ожидаем ответов других игроков...";
+      document.getElementById('preview-text').classList.remove('active');
+
+      // Симуляция ответов ботов
+      setTimeout(simulateBotAnswers, 1200);
+    }
+
+    function simulateBotAnswers() {
+      const feed = document.getElementById('feed');
+      const botAnswers = [
+        { name: "Олег_HR", text: "У меня лапки и кредитная история, отстаньте пожалуйста." },
+        { name: "Маша_Дизайн", text: "Ой, я не в тот чат скинула макет котика..." }
+      ];
+
+      botAnswers.forEach((bot, index) => {
+        setTimeout(() => {
+          const row = document.createElement('div');
+          row.className = 'message-row other';
+          row.innerHTML = `
+            <div class="message-author">@${bot.name}</div>
+            <div class="message-bubble">
+              ${bot.text}
+              <div class="reactions-bar">
+                <span class="reaction-pill" onclick="addReaction(this)">🔥</span>
+                <span class="reaction-pill" onclick="addReaction(this)">💀 1</span>
+              </div>
+            </div>
+          `;
+          feed.appendChild(row);
+          feed.scrollTop = feed.scrollHeight;
+        }, index * 1000);
+      });
+
+      // Решение Админа через 3.5 сек
+      setTimeout(simulateAdminPin, 3500);
+    }
+
+    function simulateAdminPin() {
+      const feed = document.getElementById('feed');
+      const rows = feed.querySelectorAll('.message-row.self, .message-row.other:not(.npc)');
+      const winningRow = rows[0]; // Ваш ответ признается лучшим
+      const bubble = winningRow.querySelector('.message-bubble');
+      bubble.classList.add('pinned');
+
+      // Показываем пин-бар
+      const pinBar = document.getElementById('pinned-bar');
+      pinBar.style.display = 'flex';
+      document.getElementById('pinned-snippet').innerText = bubble.innerText.substring(0, 30) + '...';
+
+      // Запускаем окно Репорта на 4 секунды
+      const revolt = document.getElementById('revolt-banner');
+      revolt.style.display = 'flex';
+      setTimeout(() => {
+        revolt.style.display = 'none';
+      }, 4000);
+    }
+
+    function triggerRevolt() {
+      alert("🚨 Вы нажали РЕПОРТ! Если все игроки поддержат — выбор Админа будет аннулирован и начнется Опрос!");
+      document.getElementById('revolt-banner').style.display = 'none';
+    }
+
+    function addReaction(el) {
+      const current = el.innerText;
+      if (!current.includes('2')) {
+        el.innerText = current.split(' ')[0] + ' 2';
+      }
+    }
+
+    function closeModal() {
+      document.getElementById('modal').style.display = 'none';
+    }
+  </script>
+</body>
+</html>

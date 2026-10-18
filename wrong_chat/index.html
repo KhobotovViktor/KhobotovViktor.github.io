@@ -3,20 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Не в тот чат! 💬 — Интерактивное Демо</title>
+  <title>Не в тот чат! 💬 — Интерактивная веб-версия</title>
   <style>
     :root {
-      --bg-dark: #0f172a;
-      --surface: #1e293b;
+      --bg-dark: #090d16;
+      --surface: #131c2e;
+      --surface-card: #1e293b;
       --surface-variant: #334155;
       --accent-blue: #38bdf8;
       --accent-cyan: #06b6d4;
       --bubble-self: #2563eb;
       --bubble-other: #1e293b;
-      --bubble-npc: #312e81;
+      --bubble-npc: #272757;
       --gold: #f59e0b;
       --red: #ef4444;
       --green: #10b981;
+      --purple: #8b5cf6;
       --text: #f8fafc;
       --text-muted: #94a3b8;
     }
@@ -39,53 +41,55 @@
       overflow: hidden;
     }
 
-    /* Мобильный фрейм смартфона */
+    /* Мобильный контейнер */
     .phone-container {
       width: 100%;
       max-width: 440px;
       height: 100vh;
-      max-height: 900px;
+      max-height: 920px;
       background: var(--bg-dark);
       display: flex;
       flex-direction: column;
       position: relative;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
-      border-radius: 24px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.85);
+      border-radius: 20px;
       overflow: hidden;
-      border: 2px solid #1e293b;
+      border: 1px solid #1e293b;
     }
 
     /* Верхний бар чата */
     .chat-header {
       background: var(--surface);
-      padding: 12px 16px;
+      padding: 10px 14px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       border-bottom: 1px solid var(--surface-variant);
-      z-index: 10;
+      z-index: 20;
     }
 
     .header-info {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
     .header-avatar {
-      width: 40px;
-      height: 40px;
+      width: 38px;
+      height: 38px;
       border-radius: 50%;
-      background: var(--accent-blue);
+      background: linear-gradient(135deg, #38bdf8, #2563eb);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
+      font-size: 18px;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
     }
 
     .header-text h1 {
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 700;
+      letter-spacing: -0.2px;
     }
 
     .header-text p {
@@ -93,38 +97,122 @@
       color: var(--text-muted);
     }
 
-    .round-badge {
-      background: rgba(56, 189, 248, 0.15);
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pill-btn {
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.3);
       color: var(--accent-blue);
       padding: 4px 8px;
       border-radius: 8px;
       font-size: 11px;
       font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s;
+    }
+
+    .pill-btn:hover {
+      background: rgba(56, 189, 248, 0.25);
+    }
+
+    /* Табло счета (Scoreboard) */
+    .scoreboard-bar {
+      background: #0d1527;
+      padding: 6px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #1e293b;
+      font-size: 11px;
+    }
+
+    .score-chips {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .score-chips::-webkit-scrollbar {
+      display: none;
+    }
+
+    .player-chip {
+      background: #1e293b;
+      border-radius: 6px;
+      padding: 2px 6px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+      border: 1px solid transparent;
+    }
+
+    .player-chip.leader {
+      border-color: var(--gold);
+      color: var(--gold);
+      font-weight: 700;
+    }
+
+    .player-chip.self {
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+      font-weight: 700;
+    }
+
+    .badge-count {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 4px;
+      padding: 1px 4px;
+      font-size: 10px;
     }
 
     /* Баннер аномалии */
     .anomaly-banner {
-      background: rgba(139, 92, 246, 0.2);
+      background: linear-gradient(90deg, rgba(139, 92, 246, 0.25), rgba(6, 182, 212, 0.15));
       border-bottom: 1px solid rgba(139, 92, 246, 0.4);
-      padding: 6px 14px;
+      padding: 7px 12px;
       font-size: 11px;
       display: flex;
       align-items: center;
-      gap: 8px;
-      color: #c4b5fd;
+      justify-content: space-between;
+      color: #ddd6fe;
       font-weight: 600;
-      animation: pulse 2s infinite;
     }
 
-    /* Закрепленное сообщение */
+    .anomaly-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .timer-badge {
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #f87171;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-weight: 800;
+      font-size: 11px;
+    }
+
+    /* Пин бар */
     .pinned-bar {
       background: rgba(245, 158, 11, 0.15);
-      border-bottom: 1px solid rgba(245, 158, 11, 0.3);
+      border-bottom: 1px solid rgba(245, 158, 11, 0.35);
       padding: 6px 14px;
       display: flex;
       align-items: center;
       gap: 8px;
       font-size: 11px;
+      animation: slideDown 0.3s ease-out;
     }
 
     .pinned-bar span {
@@ -136,17 +224,20 @@
     .chat-feed {
       flex: 1;
       overflow-y: auto;
-      padding: 16px 12px;
+      padding: 12px 10px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
+      scroll-behavior: smooth;
     }
 
     /* Пузыри сообщений */
     .message-row {
       display: flex;
       flex-direction: column;
-      max-width: 82%;
+      max-width: 84%;
+      animation: fadeIn 0.25s ease-out;
+      position: relative;
     }
 
     .message-row.self {
@@ -158,9 +249,9 @@
     }
 
     .message-author {
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 600;
-      margin-bottom: 3px;
+      margin-bottom: 2px;
       color: var(--text-muted);
       display: flex;
       align-items: center;
@@ -168,13 +259,15 @@
     }
 
     .message-bubble {
-      padding: 10px 14px;
-      border-radius: 16px;
-      font-size: 14px;
-      line-height: 1.4;
+      padding: 9px 12px;
+      border-radius: 14px;
+      font-size: 13px;
+      line-height: 1.35;
       position: relative;
-      background: var(--surface);
+      background: var(--surface-card);
       border: 1px solid var(--surface-variant);
+      word-break: break-word;
+      transition: all 0.2s;
     }
 
     .message-row.self .message-bubble {
@@ -186,115 +279,239 @@
     .message-row.npc .message-bubble {
       background: var(--bubble-npc);
       border: 1px solid #4338ca;
+      box-shadow: 0 4px 12px rgba(49, 46, 129, 0.3);
     }
 
     .message-bubble.pinned {
-      border: 2px solid var(--gold);
+      border: 2px solid var(--gold) !important;
+      box-shadow: 0 0 14px rgba(245, 158, 11, 0.45);
     }
 
     .message-bubble.bribe {
-      border: 2px solid var(--gold);
+      border: 2px solid var(--gold) !important;
       box-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
     }
 
-    /* Спойлер */
-    .spoiler {
-      background: #475569;
-      color: transparent;
-      border-radius: 4px;
-      padding: 2px 4px;
+    /* Кликер для Админа */
+    .message-bubble.clickable-admin {
       cursor: pointer;
+      border: 2px dashed var(--accent-cyan);
+      animation: pulseCyan 1.5s infinite;
+    }
+
+    .message-bubble.clickable-admin:hover {
+      background: #1e3a5f;
+      transform: scale(1.02);
+    }
+
+    .admin-pin-tag {
+      display: inline-block;
+      background: var(--accent-cyan);
+      color: #000;
+      font-size: 9px;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-top: 4px;
+    }
+
+    /* Спойлер */
+    .spoiler-hidden {
+      filter: blur(4px);
       user-select: none;
-      transition: background 0.3s;
+      background: rgba(255, 255, 255, 0.08);
+      cursor: pointer;
+      padding: 2px 4px;
+      border-radius: 4px;
     }
 
-    .spoiler.revealed {
-      background: transparent;
-      color: inherit;
+    /* Реакции и кнопка пересылки */
+    .message-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 4px;
+      gap: 6px;
     }
 
-    /* Реакции под пузырем */
     .reactions-bar {
       display: flex;
       gap: 4px;
-      margin-top: 6px;
     }
 
     .reaction-pill {
-      background: rgba(15, 23, 42, 0.6);
-      border: 1px solid var(--surface-variant);
+      background: rgba(255, 255, 255, 0.08);
       border-radius: 10px;
       padding: 2px 6px;
-      font-size: 11px;
+      font-size: 10px;
       cursor: pointer;
+      user-select: none;
+      transition: transform 0.1s;
     }
 
-    /* Баннер бунта (Массовый репорт) */
-    .revolt-banner {
-      background: rgba(239, 68, 68, 0.2);
-      border: 2px solid var(--red);
-      border-radius: 14px;
-      padding: 10px 14px;
+    .reaction-pill:active {
+      transform: scale(1.2);
+    }
+
+    .stash-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 11px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      margin: 8px 12px;
-      animation: pulse-red 0.8s infinite alternate;
+      gap: 2px;
+      padding: 2px 4px;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+
+    .stash-btn:hover {
+      color: var(--accent-blue);
+      background: rgba(56, 189, 248, 0.1);
+    }
+
+    /* Индикатор печати */
+    .typing-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--text-muted);
+      font-style: italic;
+      padding: 4px 8px;
+    }
+
+    .typing-dots {
+      display: inline-flex;
+      gap: 3px;
+    }
+
+    .typing-dots span {
+      width: 4px;
+      height: 4px;
+      background: var(--accent-cyan);
+      border-radius: 50%;
+      animation: blink 1.2s infinite;
+    }
+
+    .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+    /* Бунт (Репорт) баннер */
+    .revolt-banner {
+      background: linear-gradient(90deg, #991b1b, #ef4444);
+      color: #fff;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 -4px 12px rgba(239, 68, 68, 0.4);
+      animation: pulseRed 1s infinite alternate;
+      z-index: 15;
     }
 
     .revolt-btn {
-      background: var(--red);
-      color: #fff;
+      background: #fff;
+      color: #991b1b;
+      font-weight: 800;
       border: none;
       padding: 6px 12px;
       border-radius: 8px;
-      font-weight: 700;
+      font-size: 11px;
       cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      transition: transform 0.1s;
     }
 
-    /* Нижняя панель черновиков Т9 */
-    .keyboard-panel {
-      background: var(--surface);
-      border-top: 1px solid var(--surface-variant);
-      padding: 10px 12px;
+    .revolt-btn:active {
+      transform: scale(0.95);
     }
 
-    .input-preview {
-      background: #0f172a;
-      border-radius: 18px;
-      padding: 8px 14px;
+    /* Панель следующего раунда */
+    .next-round-bar {
+      background: #1e293b;
+      border-top: 1px solid #334155;
+      padding: 10px 14px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 8px;
+      gap: 10px;
+      z-index: 15;
+      animation: slideUp 0.3s ease-out;
+    }
+
+    .next-round-btn {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+      transition: all 0.2s;
+    }
+
+    .next-round-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    /* Панель клавиатуры Т9 */
+    .keyboard-panel {
+      background: var(--surface);
+      border-top: 1px solid var(--surface-variant);
+      padding: 8px 12px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 10;
+    }
+
+    .input-preview {
+      background: #090d16;
       border: 1px solid var(--surface-variant);
+      border-radius: 12px;
+      padding: 8px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 40px;
     }
 
     .input-preview-text {
-      font-size: 13px;
+      font-size: 12px;
       color: var(--text-muted);
-      overflow: hidden;
       white-space: nowrap;
+      overflow: hidden;
       text-overflow: ellipsis;
       flex: 1;
+      padding-right: 8px;
     }
 
     .input-preview-text.active {
       color: var(--text);
+      font-weight: 500;
     }
 
     .action-icons {
       display: flex;
+      align-items: center;
       gap: 6px;
     }
 
     .icon-btn {
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      border: none;
-      background: var(--surface-variant);
-      color: #fff;
+      background: #1e293b;
+      color: var(--text);
+      border: 1px solid #334155;
+      border-radius: 8px;
+      width: 32px;
+      height: 32px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -305,10 +522,15 @@
 
     .icon-btn.send {
       background: var(--accent-blue);
+      border: none;
+      color: #000;
+      font-weight: bold;
     }
 
     .icon-btn.bribe.active {
       background: var(--gold);
+      border-color: #d97706;
+      box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
     }
 
     .drafts-scroll {
@@ -316,15 +538,17 @@
       gap: 8px;
       overflow-x: auto;
       padding-bottom: 4px;
+      scrollbar-width: thin;
+      scrollbar-color: #334155 transparent;
     }
 
     .draft-chip {
-      background: #0f172a;
+      background: #0b1120;
       border: 1px solid var(--surface-variant);
-      border-radius: 12px;
-      padding: 8px 12px;
-      min-width: 130px;
-      max-width: 190px;
+      border-radius: 10px;
+      padding: 6px 10px;
+      min-width: 140px;
+      max-width: 180px;
       cursor: pointer;
       flex-shrink: 0;
       transition: all 0.2s;
@@ -333,6 +557,12 @@
     .draft-chip.selected {
       border-color: var(--accent-blue);
       background: #1e293b;
+      box-shadow: 0 0 8px rgba(56, 189, 248, 0.3);
+    }
+
+    .draft-chip.second-selected {
+      border-color: var(--purple);
+      background: #2e1065;
     }
 
     .draft-category {
@@ -349,49 +579,84 @@
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
+      line-height: 1.3;
     }
 
-    /* Модальное окно */
+    /* Модальные окна */
     .modal-overlay {
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(0, 0, 0, 0.75);
+      background: rgba(0, 0, 0, 0.82);
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 20px;
+      padding: 16px;
       z-index: 100;
+      animation: fadeIn 0.2s ease-out;
     }
 
     .modal-card {
       background: var(--surface);
-      border: 2px solid var(--accent-cyan);
-      border-radius: 20px;
-      padding: 20px;
+      border: 1px solid var(--accent-cyan);
+      border-radius: 18px;
+      padding: 18px;
       width: 100%;
       max-width: 360px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
       text-align: center;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
     }
 
     .modal-btn {
       background: var(--accent-blue);
-      color: #fff;
+      color: #000;
       border: none;
       padding: 10px 16px;
-      border-radius: 12px;
+      border-radius: 10px;
       font-weight: 700;
+      font-size: 13px;
       width: 100%;
       cursor: pointer;
       margin-top: 12px;
+      transition: all 0.2s;
     }
 
-    @keyframes pulse-red {
-      from { transform: scale(1); }
-      to { transform: scale(1.02); }
+    .modal-btn:hover {
+      filter: brightness(1.1);
     }
+
+    /* Всплывающие уведомления (Toast) */
+    .toast-notice {
+      position: absolute;
+      top: 70px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1e293b;
+      border: 1px solid var(--accent-cyan);
+      color: #fff;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      z-index: 50;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+      animation: fadeInDown 0.3s ease-out;
+      pointer-events: none;
+    }
+
+    /* Анимации */
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeInDown { from { opacity: 0; transform: translate(-50%, -10px); } to { opacity: 1; transform: translate(-50%, 0); } }
+    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    @keyframes slideDown { from { transform: translateY(-100%); } to { transform: translateY(0); } }
+    @keyframes pulseCyan { 0%, 100% { border-color: var(--accent-cyan); } 50% { border-color: transparent; } }
+    @keyframes pulseRed { from { transform: scale(1); } to { transform: scale(1.02); } }
+    @keyframes blink { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
   </style>
 </head>
 <body>
@@ -400,231 +665,880 @@
     <!-- Header -->
     <div class="chat-header">
       <div class="header-info">
-        <div class="header-avatar">💬</div>
+        <div class="header-avatar" id="avatar-icon">💬</div>
         <div class="header-text">
-          <h1>Не в тот чат! #X9K2L</h1>
-          <p id="sub-status">Админ: @Начальник_Чеха • 4 в сети</p>
+          <h1 id="chat-title">Не в тот чат! #X9K2L</h1>
+          <p id="sub-status">Админ: @Олег_HR • 4 игрока</p>
         </div>
       </div>
-      <div class="round-badge" id="round-number">РАУНД 1</div>
+      <div class="header-actions">
+        <button class="pill-btn" onclick="openStashModal()" title="Папка «Пересланное»">
+          📁 <span id="stash-count-badge">0</span>
+        </button>
+        <button class="pill-btn" onclick="openDiceModal()" title="Бросить кубик 🎲">🎲</button>
+      </div>
     </div>
 
-    <!-- Аномалия -->
+    <!-- Табло счета -->
+    <div class="scoreboard-bar">
+      <div style="font-size: 10px; color: var(--text-muted); font-weight: 700; margin-right: 6px;">СЧЁТ (до 5):</div>
+      <div class="score-chips" id="scoreboard-chips">
+        <!-- Генерируется через JS -->
+      </div>
+    </div>
+
+    <!-- Аномалия баннер -->
     <div class="anomaly-banner" id="anomaly-bar">
-      <span>⚡</span>
-      <span id="anomaly-text">Слоумод / Блиц: На ответ дается 10 секунд!</span>
+      <div class="anomaly-left">
+        <span id="anomaly-icon" style="font-size: 14px;">⚡</span>
+        <span id="anomaly-text">Слоумод / Блиц: Таймер урезан до 10 секунд!</span>
+      </div>
+      <div class="timer-badge" id="round-timer-badge">10с</div>
     </div>
 
     <!-- Пин бар -->
     <div class="pinned-bar" id="pinned-bar" style="display: none;">
       <span>📌 Закреплено:</span>
-      <span id="pinned-snippet" style="color: var(--text); font-weight: normal; margin-left: 4px;">...</span>
+      <span id="pinned-snippet" style="color: var(--text); font-weight: normal; margin-left: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">...</span>
     </div>
 
-    <!-- Лента чата -->
+    <!-- Лента сообщений чата -->
     <div class="chat-feed" id="feed">
-      <!-- NPC Сообщение -->
-      <div class="message-row other npc">
-        <div class="message-author" style="color: var(--accent-cyan);">🤖 Вброс: Начальник</div>
-        <div class="message-bubble">
-          @Вы, зайдите ко мне в кабинет прямо сейчас. И захватите с собой объяснительную по поводу вчерашнего инцидента с кулером!
-        </div>
-      </div>
+      <!-- Сообщения добавляются динамически -->
     </div>
 
-    <!-- Бунт (Репорт) -->
+    <!-- Индикатор печати -->
+    <div class="typing-row" id="typing-indicator" style="display: none;">
+      <span id="typing-text">@Маша_Дизайн печатает</span>
+      <div class="typing-dots"><span></span><span></span><span></span></div>
+    </div>
+
+    <!-- Бунт (Репорт) баннер -->
     <div class="revolt-banner" id="revolt-banner" style="display: none;">
       <div>
-        <div style="font-weight: 800; font-size: 12px; color: var(--red);">🚨 КРИНЖ-АТАКА! БУНТ ЧАТА (4 сек)</div>
-        <div style="font-size: 10px; color: var(--text-muted);" id="revolt-counter">Собрано голосов: 2 из 3</div>
+        <div style="font-weight: 800; font-size: 11px;">🚨 КРИНЖ-АТАКА! БУНТ ЧАТА (4 сек)</div>
+        <div style="font-size: 10px; opacity: 0.85;" id="revolt-counter">Нажми Репорт, чтобы отменить выбор Админа!</div>
       </div>
       <button class="revolt-btn" id="revolt-btn" onclick="triggerRevolt()">РЕПОРТ 🚨</button>
     </div>
 
-    <!-- Клавиатура черновиков Т9 -->
-    <div class="keyboard-panel">
+    <!-- Панель «Следующий раунд» -->
+    <div class="next-round-bar" id="next-round-bar" style="display: none;">
+      <div>
+        <div style="font-size: 12px; font-weight: 700;" id="round-summary-text">🎉 Раунд завершен!</div>
+        <div style="font-size: 10px; color: var(--text-muted);" id="round-summary-sub">Нажмите для перехода к следующему вбросу</div>
+      </div>
+      <button class="next-round-btn" onclick="startNextRound()">Дальше ▶</button>
+    </div>
+
+    <!-- Панель клавиатуры Т9 / Управления Админа -->
+    <div class="keyboard-panel" id="keyboard-panel">
       <div class="input-preview">
-        <span class="input-preview-text" id="preview-text">Выберите шаблон ответа ниже...</span>
-        <div class="action-icons">
+        <span class="input-preview-text" id="preview-text">Выберите черновик ответа ниже...</span>
+        <div class="action-icons" id="action-icons">
           <button class="icon-btn bribe" id="bribe-btn" title="Донат Админу (Золотая VIP-рамка)" onclick="toggleBribe()">💰</button>
-          <button class="icon-btn" title="Слепой вброс Т9 (x2 очков)" onclick="blindShot()">🎲</button>
-          <button class="icon-btn send" title="Отправить" onclick="sendSelectedDraft()">➤</button>
+          <button class="icon-btn" id="blind-btn" title="Слепой вброс Т9 (x2 очков)" onclick="blindShot()">🎲</button>
+          <button class="icon-btn send" id="send-btn" title="Отправить ответ" onclick="sendSelectedDraft()">➤</button>
         </div>
       </div>
 
-      <div style="font-size: 10px; color: var(--text-muted); margin-bottom: 4px; font-weight: 600;">Черновики Т9:</div>
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-size: 10px; color: var(--text-muted); font-weight: 600;" id="drafts-header-label">Черновики Т9:</span>
+        <span style="font-size: 9px; color: var(--accent-cyan);" id="drafts-hint-label">Нажми для выбора</span>
+      </div>
+
       <div class="drafts-scroll" id="drafts-container">
-        <!-- Генерируется через JS -->
+        <!-- Карточки черновиков генерируются динамически -->
       </div>
     </div>
 
-    <!-- Модалка кубика / дуэли -->
-    <div class="modal-overlay" id="modal" style="display: none;">
+    <!-- Модалка Дуэли на кубиках 🎲 -->
+    <div class="modal-overlay" id="dice-modal" style="display: none;">
       <div class="modal-card">
-        <div style="font-size: 32px; margin-bottom: 8px;">🎲</div>
-        <h2 style="font-size: 16px; margin-bottom: 6px;">Дуэль на кубиках за шаблон!</h2>
-        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 14px;">
-          Вы и @Артем_Тимлид выбрали один и тот же шаблон ответа!
+        <div style="font-size: 34px; margin-bottom: 6px;">🎲</div>
+        <h2 style="font-size: 15px; margin-bottom: 4px;">Дуэль за коронный шаблон!</h2>
+        <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px;" id="dice-reason">
+          Два игрока выбрали один и тот же шаблон из «Избранного». Решаем кубиком!
         </p>
-        <div style="display: flex; justify-content: space-around; font-size: 14px; font-weight: 800; margin: 10px 0;">
-          <div>Вы: <span id="dice-p1" style="color: var(--accent-cyan); font-size: 24px;">⚄ 5</span></div>
-          <div style="color: var(--text-muted);">VS</div>
-          <div>Бот: <span id="dice-p2" style="color: var(--gold); font-size: 24px;">⚂ 3</span></div>
+        <div style="display: flex; justify-content: space-around; align-items: center; margin: 12px 0;">
+          <div>
+            <div style="font-size: 12px; color: var(--text-muted);">Вы</div>
+            <div id="dice-val-1" style="color: var(--accent-cyan); font-size: 32px; font-weight: 900;">⚄ 5</div>
+          </div>
+          <div style="font-size: 16px; font-weight: 800; color: var(--text-muted);">VS</div>
+          <div>
+            <div style="font-size: 12px; color: var(--text-muted);" id="dice-opponent-name">@Олег_HR</div>
+            <div id="dice-val-2" style="color: var(--gold); font-size: 32px; font-weight: 900;">⚂ 3</div>
+          </div>
         </div>
-        <div style="color: var(--green); font-size: 12px; font-weight: 700;" id="dice-winner">
-          🏆 Победа! Шаблон остается у вас!
+        <div style="color: var(--green); font-size: 12px; font-weight: 700; margin-top: 6px;" id="dice-winner-text">
+          🏆 Победа! Шаблон закрепляется за вами!
         </div>
-        <button class="modal-btn" onclick="closeModal()">Продолжить игру</button>
+        <button class="modal-btn" onclick="rollInteractiveDice()">Бросить снова 🎲</button>
+        <button class="modal-btn" style="background: var(--surface-card); color: var(--text); border: 1px solid var(--surface-variant);" onclick="closeDiceModal()">Закрыть</button>
       </div>
     </div>
+
+    <!-- Модалка Папки «Пересланное» (Stash) -->
+    <div class="modal-overlay" id="stash-modal" style="display: none;">
+      <div class="modal-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+          <h2 style="font-size: 15px; font-weight: 800;">📁 Папка «Пересланное»</h2>
+          <span style="font-size: 11px; color: var(--accent-cyan);" id="stash-count-text">0 цитат</span>
+        </div>
+        <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 10px; text-align: left;">
+          Здесь хранятся сохраненные из чата шутки. В мобильной версии они разблокируются в «Коллекцию» за рекламу 🎬 или с подпиской VIP.
+        </p>
+        <div style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; text-align: left;" id="stash-items-list">
+          <!-- Заполняется динамически -->
+        </div>
+        <button class="modal-btn" onclick="closeStashModal()">Вернуться в чат</button>
+      </div>
+    </div>
+
+    <!-- Модалка Победы / Конца матча -->
+    <div class="modal-overlay" id="game-over-modal" style="display: none;">
+      <div class="modal-card">
+        <div style="font-size: 40px; margin-bottom: 6px;">🏆</div>
+        <h2 style="font-size: 18px; color: var(--gold);" id="game-winner-title">МАТЧ ЗАВЕРШЕН!</h2>
+        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 14px;" id="game-winner-sub">
+          @Вы набрали 5 очков и стали Королем переписки!
+        </p>
+        <!-- Карточка MVP шутки -->
+        <div style="background: #090d16; border: 1px solid var(--gold); border-radius: 12px; padding: 12px; text-align: left; margin-bottom: 12px;">
+          <div style="font-size: 9px; color: var(--gold); font-weight: 800; margin-bottom: 4px;">🔥 ЛУЧШАЯ ШУТКА МАТЧА (MVP)</div>
+          <div style="font-size: 11px; color: var(--text-muted);" id="mvp-trigger-text">Вброс: «Срочно зайдите в кабинет...»</div>
+          <div style="font-size: 13px; font-weight: 700; color: #fff; margin-top: 6px;" id="mvp-reply-text">«Да я просто за хлебом вышел...»</div>
+          <div style="font-size: 10px; color: var(--accent-cyan); margin-top: 6px;" id="mvp-author-text">— @Вы (4 реакции 🔥)</div>
+        </div>
+        <button class="modal-btn" onclick="restartFullGame()">Сыграть реванш 🔄</button>
+      </div>
+    </div>
+
   </div>
 
   <script>
-    // Демо-данные шаблонов
-    const drafts = [
-      { id: "d1", cat: "Оправдания", text: "Да я просто за хлебом вышел, само как-то получилось...", tier: "standard" },
-      { id: "d2", cat: "Дерзость", text: "Скинь 500 рублей на карту и я сделаю вид, что сообщения не было.", tier: "gradient" },
-      { id: "d3", cat: "Паника", text: "Товарищ майор, удалите переписку, это для школьного реферата!", tier: "neon" },
-      { id: "d4", cat: "Кринж", text: "Это не я, меня загипнотизировали цыгане-астрологи!", tier: "standard" },
-      { id: "d5", cat: "Сарказм", text: "Поздравляю, вы выиграли супер-приз: мое полное безразличие.", tier: "gradient" }
+    // =========================================================
+    // Аудио эффекты (Web Audio API — без внешних файлов)
+    // =========================================================
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playBeep(freq, type = 'sine', duration = 0.1) {
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    // =========================================================
+    // Данные игры: Вбросы, Черновики, Аномалии
+    // =========================================================
+    const TRIGGERS = [
+      { sender: "Начальник", avatar: "🏢", text: "@Вы, зайдите ко мне в кабинет прямо сейчас. И захватите с собой объяснительную по поводу вчерашнего инцидента с кулером!" },
+      { sender: "Мама", avatar: "👩‍👧", text: "Сынок, я нашла у тебя под матрасом странный сверток с надписью 'Секретное оружие @Олег_HR'. Что это такое?!" },
+      { sender: "Бывшая", avatar: "💔", text: "Я случайно увидела твою историю в Telegram... Ты реально променял наши 3 года отношений на ЭТО?!" },
+      { sender: "Госуслуги", avatar: "🏛️", text: "Уведомление: Ваша заявка на списание долгов в обмен на круглосуточную слежку за @Маша_Дизайн успешно отклонена." },
+      { sender: "Чат подъезда №4", avatar: "🚪", text: "Уважаемые жильцы! Кто оставил на лестничной клетке чучело соседа в натуральную величину с лицом @Артем_Тимлид?! Заберите, дети боятся!" },
+      { sender: "Служба безопасности банка", avatar: "🏦", text: "Здравствуйте! С вашей карты только что была оплачена аренда белого коня и 40 пачек пельменей. Подтверждаете операцию?" },
+      { sender: "Краш из Тиндера", avatar: "💘", text: "Свидание прошло супер, но зачем ты посреди ресторана начал доказывать официанту, что @Вы — масон и управляет ценами на бензин?" },
+      { sender: "Системный бот Т9", avatar: "🤖", text: "⚠️ Ошибка отправки: Сообщение 'Я случайно удалил базу данных компании' доставлено в общий чат холдинга." }
     ];
 
-    let selectedDraft = null;
+    const ALL_DRAFTS = [
+      { id: "d1", cat: "Оправдания", text: "Да я просто за хлебом вышел, само как-то получилось..." },
+      { id: "d2", cat: "Дерзость", text: "Скинь 500 рублей на карту и я сделаю вид, что этого сообщения не было." },
+      { id: "d3", cat: "Паника", text: "Товарищ майор, удалите переписку, пожалуйста, это для школьного реферата!" },
+      { id: "d4", cat: "Кринж", text: "Это не я, меня загипнотизировали цыгане-астрологи через Wi-Fi!" },
+      { id: "d5", cat: "Сарказм", text: "Поздравляю, вы выиграли супер-приз: моё полное и искреннее безразличие." },
+      { id: "d6", cat: "Абсурд", text: "Главное не паниковать, сейчас вызову экзорциста и всё решим." },
+      { id: "d7", cat: "Мемы", text: "У меня лапки и кредитная история, отстаньте от меня пожалуйста." },
+      { id: "d8", cat: "Оправдания", text: "Если меня спросят на суде — я спал и видел сны про трактор." },
+      { id: "d9", cat: "Классика", text: "Ой, извините, не в тот чат скинул... Но назад пути уже нет." },
+      { id: "d10", cat: "Эзотерика", text: "Это всё потому, что ретроградный Меркурий вошел в созвездие дураков." },
+      { id: "d11", cat: "Дерзость", text: "Я требую адвоката и тройной капучино на миндальном молоке!" },
+      { id: "d12", cat: "Абсурд", text: "Всё под контролем, это секретная часть плана по захвату Галактики." },
+      { id: "d13", cat: "Паника", text: "Я отказываюсь отвечать без присутствия моего личного психотерапевта." },
+      { id: "d14", cat: "Сарказм", text: "Скажи честно, ты долго репетировал эту драму перед зеркалом в ванной?" }
+    ];
+
+    const ANOMALIES = [
+      { type: "SLOW_MODE_BLITZ", icon: "⚡", title: "Слоумод / Блиц", desc: "Таймер урезан до 10 секунд! ⏱️", timerSec: 10 },
+      { type: "TOXIC_MODE", icon: "☣️", title: "Токсичный режим", desc: "Админ обязан выбрать САМЫЙ КРИНЖОВЫЙ ответ!", timerSec: 25 },
+      { type: "T9_AUTOCORRECT_BLIND", icon: "🙈", title: "Автозамена Т9", desc: "Жми 🎲 'Слепой вброс' — при победе дадут x2 очков!", timerSec: 25 },
+      { type: "SPOILER_TEXT", icon: "🫣", title: "Текст под спойлером", desc: "Ответы скрыты мерцающей плашкой! Видно только первые слова.", timerSec: 25 },
+      { type: "DOUBLE_POSTING", icon: "✌️", title: "Дабл-постинг", desc: "Выберите ДВА черновика подряд для комбо-ответа!", timerSec: 25, isDouble: true },
+      { type: "ACCOUNT_HACK", icon: "🔓", title: "Взлом аккаунта", desc: "Ваши черновики перемешаны с соседом!", timerSec: 20 },
+      { type: "BANHAMMER", icon: "🔨", title: "Банхаммер", desc: "Победителю раунда +3 очка, худшему мут (-1 очко)!", timerSec: 25 }
+    ];
+
+    // =========================================================
+    // Состояние игры
+    // =========================================================
+    let currentRound = 1;
+    const WIN_SCORE = 5;
+
+    let players = [
+      { id: "p_self", name: "Вы", score: 0, isSelf: true, avatar: "😎" },
+      { id: "p_bot1", name: "Олег_HR", score: 0, isSelf: false, avatar: "💼" },
+      { id: "p_bot2", name: "Маша_Дизайн", score: 0, isSelf: false, avatar: "🎨" },
+      { id: "p_bot3", name: "Артем_Тимлид", score: 0, isSelf: false, avatar: "💻" }
+    ];
+
+    let currentAdminIndex = 1; // 0 - Вы, 1 - Олег_HR, 2 - Маша, 3 - Артем
+    let activeAnomaly = ANOMALIES[0];
+    let currentTrigger = null;
+
+    let userHand = [];
+    let selectedFirstDraft = null;
+    let selectedSecondDraft = null;
     let isBribeActive = false;
-    let round = 1;
 
-    // Отрисовка шаблонов в ленте клавиатуры
-    const container = document.getElementById('drafts-container');
-    drafts.forEach(d => {
-      const chip = document.createElement('div');
-      chip.className = 'draft-chip';
-      chip.innerHTML = `
-        <div class="draft-category">${d.cat}</div>
-        <div class="draft-text">${d.text}</div>
+    let roundTimerInterval = null;
+    let roundTimerSeconds = 10;
+
+    let stashedJokes = [];
+    let roundFeedMessages = [];
+    let isRoundFinished = false;
+
+    // =========================================================
+    // Инициализация игры
+    // =========================================================
+    function initGame() {
+      // Раздача начальной руки
+      replenishHand();
+      updateScoreboard();
+      startRound(1);
+    }
+
+    function replenishHand() {
+      while (userHand.length < 6) {
+        const available = ALL_DRAFTS.filter(d => !userHand.some(h => h.id === d.id));
+        if (available.length === 0) break;
+        const randomDraft = available[Math.floor(Math.random() * available.length)];
+        userHand.push(randomDraft);
+      }
+      renderDraftsKeyboard();
+    }
+
+    function updateScoreboard() {
+      const container = document.getElementById('scoreboard-chips');
+      container.innerHTML = '';
+      const maxScore = Math.max(...players.map(p => p.score));
+
+      players.forEach(p => {
+        const chip = document.createElement('div');
+        chip.className = `player-chip ${p.isSelf ? 'self' : ''} ${p.score === maxScore && maxScore > 0 ? 'leader' : ''}`;
+        chip.innerHTML = `
+          <span>${p.avatar} ${p.name}</span>
+          <span class="badge-count">${p.score}</span>
+        `;
+        container.appendChild(chip);
+      });
+    }
+
+    // =========================================================
+    // Запуск Раунда
+    // =========================================================
+    function startRound(roundNum) {
+      currentRound = roundNum;
+      isRoundFinished = false;
+      document.getElementById('next-round-bar').style.display = 'none';
+      document.getElementById('revolt-banner').style.display = 'none';
+      document.getElementById('pinned-bar').style.display = 'none';
+
+      // Выбор аномалии
+      activeAnomaly = ANOMALIES[(roundNum - 1) % ANOMALIES.length];
+      document.getElementById('anomaly-icon').innerText = activeAnomaly.icon;
+      document.getElementById('anomaly-text').innerText = `${activeAnomaly.title}: ${activeAnomaly.desc}`;
+
+      // Смена админа
+      const currentAdmin = players[currentAdminIndex];
+      const isUserAdmin = currentAdmin.isSelf;
+
+      document.getElementById('sub-status').innerText = `Админ: @${currentAdmin.name} • Раунд ${currentRound}`;
+
+      // Очистка и запуск таймера
+      clearInterval(roundTimerInterval);
+      roundTimerSeconds = activeAnomaly.timerSec || 20;
+      updateTimerBadge();
+
+      roundTimerInterval = setInterval(() => {
+        roundTimerSeconds--;
+        updateTimerBadge();
+        if (roundTimerSeconds <= 0) {
+          clearInterval(roundTimerInterval);
+          if (!isRoundFinished && !isUserAdmin) {
+            showToast("⏱️ Время вышло! Т9 отправляет черновик за вас!");
+            blindShot();
+          }
+        }
+      }, 1000);
+
+      // Выбор вброса
+      currentTrigger = TRIGGERS[(roundNum - 1) % TRIGGERS.length];
+
+      // Очистка ленты
+      const feed = document.getElementById('feed');
+      feed.innerHTML = '';
+
+      // Вброс NPC
+      const npcRow = document.createElement('div');
+      npcRow.className = 'message-row other npc';
+      npcRow.innerHTML = `
+        <div class="message-author" style="color: var(--accent-cyan);">${currentTrigger.avatar} Вброс: ${currentTrigger.sender}</div>
+        <div class="message-bubble">
+          ${currentTrigger.text}
+        </div>
       `;
-      chip.onclick = () => selectDraft(d, chip);
-      container.appendChild(chip);
-    });
+      feed.appendChild(npcRow);
 
-    function selectDraft(draft, chipEl) {
-      selectedDraft = draft;
-      document.querySelectorAll('.draft-chip').forEach(c => c.classList.remove('selected'));
-      chipEl.classList.add('selected');
-      const preview = document.getElementById('preview-text');
-      preview.innerText = draft.text;
-      preview.classList.add('active');
+      // Сброс выбора черновиков
+      selectedFirstDraft = null;
+      selectedSecondDraft = null;
+      isBribeActive = false;
+      document.getElementById('bribe-btn').classList.remove('active');
+
+      // Настройка панели ввода в зависимости от роли (Игрок vs Админ)
+      const keyboard = document.getElementById('keyboard-panel');
+      if (isUserAdmin) {
+        // Пользователь — Админ!
+        document.getElementById('preview-text').innerText = "👑 ВЫ АДМИН! Ждите ответов игроков и нажмите 📌 на лучший!";
+        document.getElementById('preview-text').classList.add('active');
+        document.getElementById('action-icons').style.display = 'none';
+        document.getElementById('drafts-header-label').innerText = "Режим модерации:";
+        document.getElementById('drafts-hint-label').innerText = "Выбирайте кликом по сообщению";
+        document.getElementById('drafts-container').innerHTML = `
+          <div style="font-size: 11px; color: var(--gold); padding: 8px 0;">
+            👑 Вы оцениваете юмор в этом раунде. Когда боты напишут — кликните по любому ответу в ленте, чтобы закрепить его!
+          </div>
+        `;
+        // Боты сразу начинают отвечать
+        setTimeout(simulateBotsRespondingToAdmin, 1200);
+      } else {
+        // Пользователь — обычный игрок
+        document.getElementById('preview-text').innerText = activeAnomaly.isDouble ? "Выберите ДВА черновика (Дабл-пост)..." : "Выберите черновик ответа ниже...";
+        document.getElementById('preview-text').classList.remove('active');
+        document.getElementById('action-icons').style.display = 'flex';
+        document.getElementById('drafts-header-label').innerText = "Черновики Т9:";
+        document.getElementById('drafts-hint-label').innerText = "Нажми для выбора";
+        replenishHand();
+      }
+    }
+
+    function updateTimerBadge() {
+      const badge = document.getElementById('round-timer-badge');
+      badge.innerText = `${roundTimerSeconds}с`;
+      if (roundTimerSeconds <= 5) {
+        badge.style.background = 'rgba(239, 68, 68, 0.4)';
+        badge.style.color = '#fff';
+      } else {
+        badge.style.background = 'rgba(239, 68, 68, 0.2)';
+        badge.style.color = '#f87171';
+      }
+    }
+
+    // =========================================================
+    // Отрисовка клавиатуры черновиков
+    // =========================================================
+    function renderDraftsKeyboard() {
+      const container = document.getElementById('drafts-container');
+      container.innerHTML = '';
+
+      userHand.forEach(d => {
+        const chip = document.createElement('div');
+        chip.className = 'draft-chip';
+        if (selectedFirstDraft?.id === d.id) chip.classList.add('selected');
+        if (selectedSecondDraft?.id === d.id) chip.classList.add('second-selected');
+
+        chip.innerHTML = `
+          <div class="draft-category">${d.cat}</div>
+          <div class="draft-text">${d.text}</div>
+        `;
+        chip.onclick = () => onDraftClicked(d);
+        container.appendChild(chip);
+      });
+    }
+
+    function onDraftClicked(draft) {
+      playBeep(440, 'triangle', 0.05);
+      const isDouble = activeAnomaly.isDouble;
+
+      if (!isDouble) {
+        selectedFirstDraft = draft;
+        document.getElementById('preview-text').innerText = draft.text;
+        document.getElementById('preview-text').classList.add('active');
+        renderDraftsKeyboard();
+      } else {
+        // Дабл-постинг: выбор 2-х
+        if (!selectedFirstDraft) {
+          selectedFirstDraft = draft;
+          document.getElementById('preview-text').innerText = `1/2: ${draft.text}`;
+          document.getElementById('preview-text').classList.add('active');
+        } else if (selectedFirstDraft.id === draft.id) {
+          selectedFirstDraft = null;
+          selectedSecondDraft = null;
+          document.getElementById('preview-text').innerText = "Выберите ДВА черновика...";
+          document.getElementById('preview-text').classList.remove('active');
+        } else if (!selectedSecondDraft) {
+          selectedSecondDraft = draft;
+          document.getElementById('preview-text').innerText = `📎 ${selectedFirstDraft.text} + ${draft.text}`;
+        } else {
+          selectedSecondDraft = draft;
+          document.getElementById('preview-text').innerText = `📎 ${selectedFirstDraft.text} + ${draft.text}`;
+        }
+        renderDraftsKeyboard();
+      }
     }
 
     function toggleBribe() {
       isBribeActive = !isBribeActive;
+      playBeep(isBribeActive ? 880 : 330, 'sine', 0.08);
       document.getElementById('bribe-btn').classList.toggle('active', isBribeActive);
+      showToast(isBribeActive ? "💰 Золотая VIP-рамка включена! Админ получит взятку!" : "VIP-рамка выключена");
     }
 
     function blindShot() {
-      const randomDraft = drafts[Math.floor(Math.random() * drafts.length)];
-      selectedDraft = randomDraft;
+      if (userHand.length === 0) return;
+      playBeep(520, 'square', 0.1);
+      const randomDraft = userHand[Math.floor(Math.random() * userHand.length)];
+      selectedFirstDraft = randomDraft;
       sendSelectedDraft(true);
     }
 
+    // =========================================================
+    // Отправка ответа Пользователем
+    // =========================================================
     function sendSelectedDraft(isBlind = false) {
-      if (!selectedDraft) return;
-      const feed = document.getElementById('feed');
+      if (!selectedFirstDraft) {
+        showToast("⚠️ Сначала выберите черновик ответа!");
+        return;
+      }
 
-      // Сообщение игрока
+      clearInterval(roundTimerInterval);
+      playBeep(600, 'sine', 0.12);
+
+      let finalReplyText = selectedFirstDraft.text;
+      if (selectedSecondDraft) {
+        finalReplyText = `${selectedFirstDraft.text}\n📎 + ${selectedSecondDraft.text}`;
+      }
+
+      // Удаляем использованный черновик из руки
+      userHand = userHand.filter(h => h.id !== selectedFirstDraft.id && (!selectedSecondDraft || h.id !== selectedSecondDraft.id));
+
+      const feed = document.getElementById('feed');
       const row = document.createElement('div');
       row.className = 'message-row self';
+
+      const isSpoiler = activeAnomaly.type === "SPOILER_TEXT";
       const bribeClass = isBribeActive ? 'bribe' : '';
-      const blindText = isBlind ? ' [🎲 СЛЕПОЙ ВБРОС x2]' : '';
-      
+      const blindTag = isBlind ? ' [🎲 СЛЕПОЙ x2]' : '';
+
+      const msgId = 'msg_' + Date.now();
+      row.id = msgId;
+
       row.innerHTML = `
-        <div class="message-author">Вы ${isBribeActive ? '• 💰 VIP Донат' : ''}${blindText}</div>
+        <div class="message-author">Вы ${isBribeActive ? '• 💰 VIP Донат' : ''}${blindTag}</div>
         <div class="message-bubble ${bribeClass}">
-          ${selectedDraft.text}
-          <div class="reactions-bar">
-            <span class="reaction-pill" onclick="addReaction(this)">🔥 1</span>
-            <span class="reaction-pill" onclick="addReaction(this)">😂</span>
+          <span class="${isSpoiler ? 'spoiler-hidden' : ''}" onclick="revealSpoiler(this)">${finalReplyText}</span>
+          <div class="message-actions">
+            <div class="reactions-bar">
+              <span class="reaction-pill" onclick="addReaction(this)">🔥 1</span>
+              <span class="reaction-pill" onclick="addReaction(this)">😂</span>
+            </div>
+            <button class="stash-btn" onclick="saveToStash('${finalReplyText.replace(/'/g, "\\'")}', 'Вы')">📥 В папку</button>
           </div>
         </div>
       `;
       feed.appendChild(row);
       feed.scrollTop = feed.scrollHeight;
 
-      // Сброс
-      selectedDraft = null;
-      isBribeActive = false;
-      document.getElementById('bribe-btn').classList.remove('active');
-      document.getElementById('preview-text').innerText = "Ожидаем ответов других игроков...";
+      // Сброс панели
+      selectedFirstDraft = null;
+      selectedSecondDraft = null;
+      document.getElementById('preview-text').innerText = "Ожидаем выбора Админа...";
       document.getElementById('preview-text').classList.remove('active');
+      renderDraftsKeyboard();
 
-      // Симуляция ответов ботов
-      setTimeout(simulateBotAnswers, 1200);
+      // Симулируем ответы ботов и выбор Админа
+      setTimeout(simulateBotAnswersAndAdminDecision, 1200);
     }
 
-    function simulateBotAnswers() {
+    // =========================================================
+    // Симуляция ответов ботов
+    // =========================================================
+    function simulateBotAnswersAndAdminDecision() {
       const feed = document.getElementById('feed');
-      const botAnswers = [
-        { name: "Олег_HR", text: "У меня лапки и кредитная история, отстаньте пожалуйста." },
-        { name: "Маша_Дизайн", text: "Ой, я не в тот чат скинула макет котика..." }
-      ];
+      const typingEl = document.getElementById('typing-indicator');
+      const typingText = document.getElementById('typing-text');
 
-      botAnswers.forEach((bot, index) => {
+      const nonAdminBots = players.filter(p => !p.isSelf && p.id !== players[currentAdminIndex].id);
+      let botDelay = 0;
+
+      nonAdminBots.forEach((bot, idx) => {
         setTimeout(() => {
+          typingEl.style.display = 'flex';
+          typingText.innerText = `@${bot.name} печатает`;
+          feed.scrollTop = feed.scrollHeight;
+        }, botDelay);
+
+        botDelay += 1200;
+
+        setTimeout(() => {
+          typingEl.style.display = 'none';
+          const randomDraft = ALL_DRAFTS[Math.floor(Math.random() * ALL_DRAFTS.length)];
           const row = document.createElement('div');
           row.className = 'message-row other';
+          row.id = 'bot_msg_' + idx;
+
+          const isSpoiler = activeAnomaly.type === "SPOILER_TEXT";
+
           row.innerHTML = `
             <div class="message-author">@${bot.name}</div>
             <div class="message-bubble">
-              ${bot.text}
-              <div class="reactions-bar">
-                <span class="reaction-pill" onclick="addReaction(this)">🔥</span>
-                <span class="reaction-pill" onclick="addReaction(this)">💀 1</span>
+              <span class="${isSpoiler ? 'spoiler-hidden' : ''}" onclick="revealSpoiler(this)">${randomDraft.text}</span>
+              <div class="message-actions">
+                <div class="reactions-bar">
+                  <span class="reaction-pill" onclick="addReaction(this)">🔥</span>
+                  <span class="reaction-pill" onclick="addReaction(this)">💀 1</span>
+                </div>
+                <button class="stash-btn" onclick="saveToStash('${randomDraft.text.replace(/'/g, "\\'")}', '@${bot.name}')">📥 В папку</button>
               </div>
             </div>
           `;
           feed.appendChild(row);
           feed.scrollTop = feed.scrollHeight;
-        }, index * 1000);
+        }, botDelay);
       });
 
-      // Решение Админа через 3.5 сек
-      setTimeout(simulateAdminPin, 3500);
+      // Решение Админа-бота
+      setTimeout(() => {
+        simulateAdminBotPinDecision();
+      }, botDelay + 1400);
     }
 
-    function simulateAdminPin() {
+    function simulateAdminBotPinDecision() {
       const feed = document.getElementById('feed');
-      const rows = feed.querySelectorAll('.message-row.self, .message-row.other:not(.npc)');
-      const winningRow = rows[0]; // Ваш ответ признается лучшим
+      const adminBot = players[currentAdminIndex];
+
+      const allPlayerRows = feed.querySelectorAll('.message-row:not(.npc)');
+      if (allPlayerRows.length === 0) return;
+
+      // 60% шанс победы игрока (для интересной демки), иначе бот
+      const playerWon = Math.random() < 0.65;
+      const winningRow = playerWon ? feed.querySelector('.message-row.self') : allPlayerRows[Math.floor(Math.random() * allPlayerRows.length)];
+
       const bubble = winningRow.querySelector('.message-bubble');
       bubble.classList.add('pinned');
+
+      // Снимаем спойлер с победителя
+      const spoiler = bubble.querySelector('.spoiler-hidden');
+      if (spoiler) spoiler.classList.remove('spoiler-hidden');
 
       // Показываем пин-бар
       const pinBar = document.getElementById('pinned-bar');
       pinBar.style.display = 'flex';
-      document.getElementById('pinned-snippet').innerText = bubble.innerText.substring(0, 30) + '...';
+      const textSpan = bubble.querySelector('span');
+      document.getElementById('pinned-snippet').innerText = (textSpan ? textSpan.innerText : bubble.innerText).substring(0, 34) + '...';
+
+      playBeep(784, 'sine', 0.2);
 
       // Запускаем окно Репорта на 4 секунды
       const revolt = document.getElementById('revolt-banner');
       revolt.style.display = 'flex';
-      setTimeout(() => {
+
+      let revoltTimer = setTimeout(() => {
         revolt.style.display = 'none';
+        finalizeRoundWinner(winningRow);
       }, 4000);
+
+      // Сохраняем таймер отмены репорта
+      window.activeRevoltTimer = revoltTimer;
+      window.pendingWinningRow = winningRow;
     }
 
     function triggerRevolt() {
-      alert("🚨 Вы нажали РЕПОРТ! Если все игроки поддержат — выбор Админа будет аннулирован и начнется Опрос!");
+      if (window.activeRevoltTimer) clearTimeout(window.activeRevoltTimer);
       document.getElementById('revolt-banner').style.display = 'none';
+      playBeep(220, 'sawtooth', 0.3);
+
+      showToast("🚨 БУНТ ЧАТА УСПЕШЕН! Решение Админа отменено!");
+
+      // Штраф Админу
+      const admin = players[currentAdminIndex];
+      admin.score = Math.max(0, admin.score - 1);
+      updateScoreboard();
+
+      // Опрос чата: побеждает сообщение игрока
+      const playerRow = document.getElementById('feed').querySelector('.message-row.self');
+      setTimeout(() => {
+        showToast("📊 Опрос чата выбрал ваш ответ абсолютным большинством!");
+        finalizeRoundWinner(playerRow, true);
+      }, 1000);
     }
 
-    function addReaction(el) {
-      const current = el.innerText;
-      if (!current.includes('2')) {
-        el.innerText = current.split(' ')[0] + ' 2';
+    // =========================================================
+    // Если Пользователь — АДМИН (выбирает кликом)
+    // =========================================================
+    function simulateBotsRespondingToAdmin() {
+      const feed = document.getElementById('feed');
+      const bots = players.filter(p => !p.isSelf);
+      let delay = 0;
+
+      bots.forEach((bot, idx) => {
+        delay += 900;
+        setTimeout(() => {
+          const randomDraft = ALL_DRAFTS[(idx * 3 + currentRound) % ALL_DRAFTS.length];
+          const row = document.createElement('div');
+          row.className = 'message-row other';
+          row.id = `admin_choice_${idx}`;
+
+          const isBribe = idx === 1; // 1 из ботов дает взятку золотой рамкой
+          const bribeClass = isBribe ? 'bribe' : '';
+
+          row.innerHTML = `
+            <div class="message-author">Ответ #${idx + 1} ${isBribe ? '• 💰 VIP Донат (+1 вам!)' : ''}</div>
+            <div class="message-bubble clickable-admin ${bribeClass}" onclick="adminSelectWinner(this, '${bot.name}', ${isBribe})">
+              <span>${randomDraft.text}</span>
+              <div style="font-size: 10px; color: var(--accent-cyan); margin-top: 4px; font-weight: 700;">
+                📌 Кликни, чтобы закрепить
+              </div>
+            </div>
+          `;
+          feed.appendChild(row);
+          feed.scrollTop = feed.scrollHeight;
+          playBeep(400 + idx * 100, 'sine', 0.08);
+        }, delay);
+      });
+    }
+
+    function adminSelectWinner(bubbleEl, botName, isBribe) {
+      if (isRoundFinished) return;
+      isRoundFinished = true;
+
+      // Убираем кликабельные рамки
+      document.querySelectorAll('.clickable-admin').forEach(el => {
+        el.classList.remove('clickable-admin');
+        const clickHint = el.querySelector('div[style*="accent-cyan"]');
+        if (clickHint) clickHint.remove();
+      });
+
+      bubbleEl.classList.add('pinned');
+      playBeep(880, 'sine', 0.25);
+
+      const pinBar = document.getElementById('pinned-bar');
+      pinBar.style.display = 'flex';
+      document.getElementById('pinned-snippet').innerText = bubbleEl.querySelector('span').innerText.substring(0, 34) + '...';
+
+      // Начисляем очки
+      const bot = players.find(p => p.name === botName);
+      if (bot) bot.score += 2;
+
+      // Если взятка — Админ (вы) получает +1 очко!
+      if (isBribe) {
+        players[0].score += 1;
+        showToast("💰 Вы получили +1 очко взятки от автора!");
+      }
+
+      updateScoreboard();
+
+      // Показываем плашку следующего раунда
+      document.getElementById('round-summary-text').innerText = `📌 Вы закрепили ответ @${botName}! (+2 очка)`;
+      document.getElementById('round-summary-sub').innerText = `Счет: Вы (${players[0].score}) • @${botName} (${bot.score})`;
+      document.getElementById('next-round-bar').style.display = 'flex';
+
+      checkGameOver();
+    }
+
+    // =========================================================
+    // Финализация раунда
+    // =========================================================
+    function finalizeRoundWinner(winningRow, isRevolt = false) {
+      if (isRoundFinished) return;
+      isRoundFinished = true;
+
+      const isSelf = winningRow.classList.contains('self');
+      let winnerPlayer = isSelf ? players[0] : players[1];
+
+      // Очки за раунд
+      const basePoints = activeAnomaly.type === "BANHAMMER" ? 3 : 2;
+      winnerPlayer.score += basePoints;
+
+      if (isSelf) {
+        playBeep(880, 'sine', 0.3);
+        showToast(`🎉 ВАШ ОТВЕТ ПРИЗНАН ЛУЧШИМ! (+${basePoints} очка)`);
+      } else {
+        showToast(`📌 Лучшим признан ответ @${winnerPlayer.name}! (+${basePoints} очка)`);
+      }
+
+      updateScoreboard();
+
+      // Панель перехода к следующему раунду
+      document.getElementById('round-summary-text').innerText = isSelf ? `🎉 Вы победили в раунде! (+${basePoints})` : `🏆 Победа @${winnerPlayer.name}!`;
+      document.getElementById('round-summary-sub').innerText = `Текущий лидер: ${players.reduce((a, b) => a.score > b.score ? a : b).name}`;
+      document.getElementById('next-round-bar').style.display = 'flex';
+
+      checkGameOver();
+    }
+
+    function checkGameOver() {
+      const winner = players.find(p => p.score >= WIN_SCORE);
+      if (winner) {
+        setTimeout(() => {
+          document.getElementById('game-winner-title').innerText = winner.isSelf ? "🎉 ВЫ ПОБЕДИЛИ В МАТЧЕ! 🏆" : `🏆 ПОБЕДИЛ @${winner.name}!`;
+          document.getElementById('game-winner-sub').innerText = `${winner.name} первым набрал ${WIN_SCORE} очков и захватил контроль над чатом!`;
+
+          document.getElementById('mvp-trigger-text').innerText = `Вброс: «${currentTrigger.text.substring(0, 45)}...»`;
+          document.getElementById('mvp-reply-text').innerText = `«${ALL_DRAFTS[0].text}»`;
+          document.getElementById('mvp-author-text').innerText = `— @${winner.name} (Лучший мем партии)`;
+
+          document.getElementById('game-over-modal').style.display = 'flex';
+          playBeep(1046, 'sine', 0.5);
+        }, 1200);
       }
     }
 
-    function closeModal() {
-      document.getElementById('modal').style.display = 'none';
+    function startNextRound() {
+      document.getElementById('next-round-bar').style.display = 'none';
+      // Ротация админа
+      currentAdminIndex = (currentAdminIndex + 1) % players.length;
+      startRound(currentRound + 1);
     }
+
+    function restartFullGame() {
+      players.forEach(p => p.score = 0);
+      currentRound = 1;
+      currentAdminIndex = 1;
+      document.getElementById('game-over-modal').style.display = 'none';
+      updateScoreboard();
+      startRound(1);
+    }
+
+    // =========================================================
+    // Папка «Пересланное» (Stash)
+    // =========================================================
+    function saveToStash(text, author) {
+      stashedJokes.push({ text, author, time: new Date().toLocaleTimeString().slice(0, 5) });
+      document.getElementById('stash-count-badge').innerText = stashedJokes.length;
+      playBeep(700, 'triangle', 0.08);
+      showToast("📥 Шутка сохранена в папку «Пересланное»!");
+    }
+
+    function openStashModal() {
+      const list = document.getElementById('stash-items-list');
+      const countText = document.getElementById('stash-count-text');
+      countText.innerText = `${stashedJokes.length} цитат`;
+
+      if (stashedJokes.length === 0) {
+        list.innerHTML = `
+          <div style="text-align: center; color: var(--text-muted); padding: 24px 0; font-size: 12px;">
+            В папке пока пусто!<br>Нажимайте кнопку <b>«📥 В папку»</b> под любыми смешными сообщениями в чате.
+          </div>
+        `;
+      } else {
+        list.innerHTML = stashedJokes.map((item, idx) => `
+          <div style="background: #090d16; border: 1px solid var(--surface-variant); border-radius: 10px; padding: 10px;">
+            <div style="display: flex; justify-content: space-between; font-size: 10px; color: var(--accent-cyan); margin-bottom: 4px;">
+              <span>Автор: ${item.author}</span>
+              <span style="color: var(--text-muted);">${item.time}</span>
+            </div>
+            <div style="font-size: 12px; color: #fff;">${item.text}</div>
+          </div>
+        `).join('');
+      }
+
+      document.getElementById('stash-modal').style.display = 'flex';
+    }
+
+    function closeStashModal() {
+      document.getElementById('stash-modal').style.display = 'none';
+    }
+
+    // =========================================================
+    // Дуэль на кубиках 🎲
+    // =========================================================
+    const diceFaces = ["⚀ 1", "⚁ 2", "⚂ 3", "⚃ 4", "⚄ 5", "⚅ 6"];
+
+    function openDiceModal() {
+      document.getElementById('dice-modal').style.display = 'flex';
+      rollInteractiveDice();
+    }
+
+    function closeDiceModal() {
+      document.getElementById('dice-modal').style.display = 'none';
+    }
+
+    function rollInteractiveDice() {
+      const val1 = document.getElementById('dice-val-1');
+      const val2 = document.getElementById('dice-val-2');
+      const winner = document.getElementById('dice-winner-text');
+
+      let rolls = 0;
+      const interval = setInterval(() => {
+        playBeep(300 + Math.random() * 200, 'square', 0.03);
+        val1.innerText = diceFaces[Math.floor(Math.random() * 6)];
+        val2.innerText = diceFaces[Math.floor(Math.random() * 6)];
+        rolls++;
+        if (rolls > 10) {
+          clearInterval(interval);
+          let r1 = Math.floor(Math.random() * 6);
+          let r2 = Math.floor(Math.random() * 6);
+          while (r1 === r2) r2 = Math.floor(Math.random() * 6); // Без ничьей
+
+          val1.innerText = diceFaces[r1];
+          val2.innerText = diceFaces[r2];
+
+          if (r1 > r2) {
+            winner.style.color = "var(--green)";
+            winner.innerText = "🏆 Победа! Вы выбросили больше, шаблон остается у вас!";
+            playBeep(880, 'sine', 0.2);
+          } else {
+            winner.style.color = "var(--red)";
+            winner.innerText = "💥 Поражение! Бот выиграл шаблон, ваш слот заменен на случайный.";
+            playBeep(220, 'sawtooth', 0.2);
+          }
+        }
+      }, 70);
+    }
+
+    // =========================================================
+    // Вспомогательные функции
+    // =========================================================
+    function revealSpoiler(el) {
+      el.classList.remove('spoiler-hidden');
+      playBeep(500, 'sine', 0.05);
+    }
+
+    function addReaction(el) {
+      playBeep(650, 'triangle', 0.05);
+      const text = el.innerText;
+      if (!text.includes('2')) {
+        el.innerText = text.split(' ')[0] + ' 2';
+      }
+    }
+
+    function showToast(msg) {
+      const existing = document.querySelector('.toast-notice');
+      if (existing) existing.remove();
+
+      const toast = document.createElement('div');
+      toast.className = 'toast-notice';
+      toast.innerText = msg;
+      document.querySelector('.phone-container').appendChild(toast);
+
+      setTimeout(() => {
+        toast.remove();
+      }, 2500);
+    }
+
+    // Запуск игры при загрузке
+    window.onload = initGame;
   </script>
 </body>
 </html>

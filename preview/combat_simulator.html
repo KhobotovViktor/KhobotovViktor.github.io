@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Combat Arena Simulator</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0a0910;
+      color: #fff;
+      font-family: monospace;
+      width: 420px;
+      height: 480px;
+      overflow: hidden;
+      position: relative;
+    }
+    #combat-view {
+      width: 420px;
+      height: 480px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      background: #0a0910;
+    }
+    /* Top HUD */
+    #top-hud {
+      height: 64px;
+      background: #0a0910;
+      border-b: 1px solid #27272a;
+      padding: 6px 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      z-index: 20;
+    }
+    .hud-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      font-weight: bold;
+    }
+    .hud-floor {
+      color: #facc15;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .hud-biome {
+      color: #a1a1aa;
+      font-size: 9px;
+    }
+    .hud-hp-bar {
+      width: 100%;
+      height: 12px;
+      background: #18181b;
+      border: 1px solid #3f3f46;
+      border-radius: 3px;
+      overflow: hidden;
+      position: relative;
+    }
+    .hud-hp-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #dc2626, #ef4444);
+      border-radius: 2px;
+      transition: width 0.3s;
+    }
+    .hud-hp-text {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      font-weight: 900;
+      color: #fff;
+      text-shadow: 1px 1px 2px #000;
+    }
+    /* Arena Canvas */
+    #arena-wrap {
+      flex: 1;
+      position: relative;
+      width: 420px;
+      height: 376px;
+    }
+    canvas {
+      display: block;
+      width: 420px;
+      height: 376px;
+    }
+    /* Bottom HUD */
+    #bottom-hud {
+      position: absolute;
+      bottom: 6px;
+      left: 10px;
+      right: 10px;
+      background: rgba(10, 9, 16, 0.92);
+      border: 1px solid #3f3f46;
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 10px;
+      color: #e4e4e7;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+    .ticker-text {
+      color: #fef08a;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 320px;
+    }
+  </style>
+</head>
+<body>
+  <div id="combat-view">
+    <div id="top-hud">
+      <div class="hud-header">
+        <span class="hud-floor" id="hud-floor-text">ЭТАЖ 1</span>
+        <span class="hud-biome" id="hud-biome-text">Чумные Катакомбы</span>
+      </div>
+      <div class="hud-hp-bar">
+        <div class="hud-hp-fill" id="hud-hp-fill" style="width: 100%;"></div>
+        <div class="hud-hp-text" id="hud-hp-text">1,240 / 1,240</div>
+      </div>
+    </div>
+    <div id="arena-wrap">
+      <canvas id="arena-canvas" width="420" height="376"></canvas>
+      <div id="bottom-hud">
+        <span class="ticker-text" id="hud-ticker">Отряд ведет ожесточенный бой с противником...</span>
+        <span style="color:#facc15; font-size:9px;">⚔ ХРОНИКИ</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('arena-canvas');
+    const ctx = canvas.getContext('2d');
+    const width = canvas.width;
+    const height = canvas.height;
+    const scaleFactor = Math.min(1.4, Math.max(1.0, height / 360));
+    const groundY = height * 0.78;
+
+    const imgCache = {};
+    function loadImage(url) {
+      if (!imgCache[url]) {
+        imgCache[url] = new Promise((resolve, reject) => {
+          const img = new Image();
+          img.crossOrigin = 'anonymous';
+          img.onload = () => resolve(img);
+          img.onerror = () => {
+            console.warn('Failed to load image:', url);
+            resolve(null);
+          };
+          img.src = url;
+        });
+      }
+      return imgCache[url];
+    }
+
+    const SIXTEEN_FRAME_ENTITIES = new Set([
+      'knight', 'rogue', 'wizard',
+      'abyssal_shadow', 'adamantite_colossus', 'archdruid_of_blight', 'ash_salamander', 'ashen_banshee',
+      'astral_beholder', 'astral_spark', 'bat', 'brimstone_elemental', 'carrion_butcher',
+      'cavern_basilisk', 'celestial_archon', 'cherub_of_vengeance', 'cinder_executioner', 'corpse_ghoul',
+      'corrupted_centaur', 'cosmic_automaton', 'crypt_centipede', 'crystal_borer', 'dawn_seraph',
+      'dire_wolf', 'dwarven_automaton', 'ether_drifter', 'forest_leshy', 'furnace_imp',
+      'goblin', 'golden_scarab', 'grand_inquisitor', 'gravity_devourer', 'lava_wyvern',
+      'magma_ooze', 'mirrored_phantom', 'mithril_golem', 'mutated_alchemist', 'obsidian_spinner',
+      'plague_rat', 'primordial_titan', 'quicksilver_homunculus', 'renegade_templar', 'rift_weaver',
+      'rotfang_alpha', 'rusted_sentry', 'shadow_gazer', 'skeleton', 'skeleton_archer',
+      'slime', 'solar_phoenix', 'spider', 'stone_gargoyle', 'swamp_viper',
+      'troglodyte_bomber', 'void_chimera'
+    ]);
+
+    const FLYING_ENTITIES = new Set([
+      'bat', 'lava_wyvern', 'solar_phoenix', 'astral_beholder', 'ether_drifter', 'dawn_seraph', 'astral_spark'
+    ]);
+
+    async function renderFrame(config) {
+      // config: {
+      //   monster: { spriteType, name, isBoss, biomeNum, floor },
+      //   mode: 'idle' | 'monster_attack' | 'heroes_strike',
+      // }
+      const { monster, mode } = config;
+      const isBoss = monster.isBoss || false;
+      const isFlying = FLYING_ENTITIES.has(monster.spriteType);
+      const biomeNum = monster.biomeNum || 1;
+
+      // Update Top HUD
+      document.getElementById('hud-floor-text').innerHTML = isBoss
+        ? `ЭТАЖ ${monster.floor} <span style="color:#ef4444; font-size:9px;">[БОСС]</span>`
+        : `ЭТАЖ ${monster.floor}`;
+      const biomes = [
+        "", "Чумные Катакомбы", "Заброшенные Копи", "Пепельный Лес", "Искаженный Разлом", "Астральная Бездна"
+      ];
+      document.getElementById('hud-biome-text').innerText = `${biomes[biomeNum]} • ${monster.name}`;
+      
+      const maxHp = isBoss ? 45000 : 3200;
+      const curHp = mode === 'heroes_strike' ? Math.round(maxHp * 0.72) : maxHp;
+      document.getElementById('hud-hp-fill').style.width = `${Math.round((curHp / maxHp) * 100)}%`;
+      document.getElementById('hud-hp-text').innerText = `${curHp.toLocaleString('ru-RU')} / ${maxHp.toLocaleString('ru-RU')}`;
+      
+      if (mode === 'idle') {
+        document.getElementById('hud-ticker').innerText = `${monster.name} готовится к атаке...`;
+      } else if (mode === 'monster_attack') {
+        document.getElementById('hud-ticker').innerText = `ВНИМАНИЕ! ${monster.name} наносит сокрушительный удар!`;
+      } else {
+        document.getElementById('hud-ticker').innerText = `Рыцарь пробивает защиту ${monster.name}! КРИТИЧЕСКИЙ УДАР!`;
+      }
+
+      // Preload images
+      const bgImg = await loadImage(`/assets/biomes/biome_${biomeNum}.png`);
+      
+      // Heroes sprites
+      const knightAnim = mode === 'heroes_strike' ? 'attack' : 'idle';
+      const knightFrame = mode === 'heroes_strike' ? 7 : 0;
+      const knightImg = await loadImage(`/assets/sprites/knight/${knightAnim}_${knightFrame}.png`);
+
+      const rogueAnim = mode === 'heroes_strike' ? 'attack' : 'idle';
+      const rogueFrame = mode === 'heroes_strike' ? 6 : 0;
+      const rogueImg = await loadImage(`/assets/sprites/rogue/${rogueAnim}_${rogueFrame}.png`);
+
+      const wizardImg = await loadImage(`/assets/sprites/wizard/idle_0.png`);
+
+      // Monster sprite
+      let monsterImg = null;
+      if (mode === 'monster_attack') {
+        monsterImg = await loadImage(`/assets/sprites/${monster.spriteType}/attack_8.png`) ||
+                     await loadImage(`/assets/sprites/${monster.spriteType}/attack_6.png`) ||
+                     await loadImage(`/assets/sprites/${monster.spriteType}/attack_3.png`);
+      } else {
+        monsterImg = await loadImage(`/assets/sprites/${monster.spriteType}/idle_0.png`);
+      }
+
+      ctx.clearRect(0, 0, width, height);
+
+      // 1. Draw Biome Background
+      if (bgImg) {
+        ctx.drawImage(bgImg, 0, 0, width, height);
+        ctx.fillStyle = 'rgba(10, 8, 18, 0.35)';
+        ctx.fillRect(0, 0, width, height);
+      } else {
+        ctx.fillStyle = '#0a0910';
+        ctx.fillRect(0, 0, width, height);
+      }
+
+      // 2. Dungeon Ground Gradient
+      const gradGround = ctx.createLinearGradient(0, groundY - 14, 0, height);
+      gradGround.addColorStop(0, 'rgba(21, 19, 34, 0.35)');
+      gradGround.addColorStop(0.35, 'rgba(15, 13, 24, 0.75)');
+      gradGround.addColorStop(1, 'rgba(8, 7, 13, 0.95)');
+      ctx.fillStyle = gradGround;
+      ctx.fillRect(0, groundY - 10, width, height - (groundY - 10));
+
+      // Ground Mist
+      const mistGrad = ctx.createLinearGradient(0, groundY - 12, 0, groundY + 14);
+      mistGrad.addColorStop(0, 'rgba(16, 185, 129, 0)');
+      mistGrad.addColorStop(0.5, 'rgba(16, 185, 129, 0.05)');
+      mistGrad.addColorStop(1, 'rgba(4, 30, 16, 0)');
+      ctx.fillStyle = mistGrad;
+      ctx.fillRect(0, groundY - 12, width, 26);
+
+      // Torches
+      [{ x: width * 0.12, y: height * 0.22 }, { x: width * 0.88, y: height * 0.22 }].forEach(t => {
+        ctx.fillStyle = '#3a3447';
+        ctx.fillRect(t.x - 3, t.y, 6, 16);
+        ctx.fillRect(t.x - 6, t.y - 4, 12, 6);
+        const glow = ctx.createRadialGradient(t.x, t.y - 6, 2, t.x, t.y - 6, Math.round(45 * scaleFactor));
+        glow.addColorStop(0, 'rgba(249, 115, 22, 0.22)');
+        glow.addColorStop(1, 'rgba(249, 115, 22, 0)');
+        ctx.fillStyle = glow;
+        ctx.beginPath();
+        ctx.arc(t.x, t.y - 6, Math.round(45 * scaleFactor), 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // 3. Render Heroes on Left
+      const heroes = [
+        { name: 'wizard', img: wizardImg, baseH: 82, feetRatioX: 0.3785, xRatio: 0.10, yOff: -9, lunge: 0 },
+        { name: 'rogue', img: rogueImg, baseH: 72, feetRatioX: 0.5194, xRatio: 0.27, yOff: -2, lunge: mode === 'heroes_strike' ? 8 : 0 },
+        { name: 'knight', img: knightImg, baseH: 86, feetRatioX: 0.3976, xRatio: 0.44, yOff: 5, lunge: mode === 'heroes_strike' ? 14 : 0 },
+      ];
+
+      heroes.forEach((h, idx) => {
+        if (!h.img) return;
+        ctx.save();
+        ctx.imageSmoothingEnabled = true;
+        const bH = Math.round(h.baseH * scaleFactor);
+        const aspect = h.img.naturalWidth / h.img.naturalHeight;
+        const dW = bH * aspect;
+        const drawX = width * h.xRatio + h.lunge * scaleFactor;
+        const drawY = groundY + h.yOff * scaleFactor;
+
+        ctx.translate(drawX, drawY);
+        ctx.shadowColor = 'rgba(251, 191, 36, 0.18)';
+        ctx.shadowBlur = Math.round(4 * scaleFactor);
+
+        ctx.drawImage(h.img, -dW * h.feetRatioX, -bH + 2, dW, bH);
+        ctx.restore();
+      });
+
+      // 4. Render Monster on Right
+      let mBaseH = 80;
+      if (isBoss) mBaseH = 120;
+      else if (['rusted_sentry','dwarven_automaton','corrupted_centaur','adamantite_colossus','lava_wyvern','carrion_butcher','cinder_executioner','primordial_titan'].includes(monster.spriteType)) mBaseH = 96;
+      else if (['spider','dire_wolf','forest_leshy','cavern_basilisk','stone_gargoyle'].includes(monster.spriteType)) mBaseH = 84;
+      else if (['plague_rat','magma_ooze','furnace_imp','golden_scarab'].includes(monster.spriteType)) mBaseH = 64;
+      else if (['bat','ether_drifter','solar_phoenix','astral_beholder','crypt_centipede','swamp_viper'].includes(monster.spriteType)) mBaseH = 74;
+
+      const targetH = Math.round(mBaseH * scaleFactor);
+      const floatBob = isFlying ? -18 * scaleFactor : 0;
+      const mLungeX = mode === 'monster_attack' ? -(isBoss ? 16 : 10) * scaleFactor : 0;
+      const recoilX = mode === 'heroes_strike' ? 6 * scaleFactor : 0;
+      const mDrawX = width * 0.72 + mLungeX + recoilX;
+      const mDrawY = groundY + floatBob;
+
+      // Flying ground shadow
+      if (isFlying) {
+        ctx.fillStyle = 'rgba(0,0,0,0.40)';
+        ctx.beginPath();
+        ctx.ellipse(mDrawX, groundY + 2, (isBoss ? 32 : 20) * scaleFactor, (isBoss ? 10 : 6) * scaleFactor, 0, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Boss aura
+      if (isBoss) {
+        const bossGlow = ctx.createRadialGradient(mDrawX, mDrawY - 40 * scaleFactor, 5, mDrawX, mDrawY - 40 * scaleFactor, Math.round(65 * scaleFactor));
+        bossGlow.addColorStop(0, 'rgba(168, 85, 247, 0.35)');
+        bossGlow.addColorStop(1, 'rgba(168, 85, 247, 0)');
+        ctx.fillStyle = bossGlow;
+        ctx.beginPath();
+        ctx.arc(mDrawX, mDrawY - 40 * scaleFactor, Math.round(65 * scaleFactor), 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      if (monsterImg) {
+        ctx.save();
+        ctx.imageSmoothingEnabled = true;
+        const mAspect = monsterImg.naturalWidth / monsterImg.naturalHeight;
+        const targetW = targetH * mAspect;
+
+        ctx.translate(mDrawX, mDrawY);
+        if (isBoss) {
+          ctx.shadowColor = 'rgba(168, 85, 247, 0.45)';
+          ctx.shadowBlur = Math.round(7 * scaleFactor);
+        } else {
+          ctx.shadowColor = 'rgba(0, 0, 0, 0.45)';
+          ctx.shadowBlur = Math.round(3 * scaleFactor);
+        }
+
+        ctx.drawImage(monsterImg, -targetW * 0.5, -targetH + 2, targetW, targetH);
+        ctx.restore();
+      }
+
+      // 5. Slash particles & Damage number for 'heroes_strike'
+      if (mode === 'heroes_strike') {
+        // Slash spark particles
+        for (let i = 0; i < 12; i++) {
+          const angle = Math.random() * Math.PI * 2;
+          const dist = 10 + Math.random() * 25;
+          ctx.fillStyle = i % 2 === 0 ? '#facc15' : '#ef4444';
+          ctx.fillRect(
+            mDrawX + Math.cos(angle) * dist,
+            mDrawY - targetH * 0.5 + Math.sin(angle) * dist,
+            3, 3
+          );
+        }
+
+        // Damage Number
+        ctx.save();
+        ctx.font = '900 24px monospace';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.shadowColor = '#f59e0b';
+        ctx.shadowBlur = 10;
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = '#451a03';
+        const dmgText = isBoss ? '-4,850' : '-890';
+        ctx.strokeText(dmgText, mDrawX, mDrawY - targetH - 18);
+        ctx.fillStyle = '#fef08a';
+        ctx.fillText(dmgText, mDrawX, mDrawY - targetH - 18);
+        ctx.restore();
+      }
+
+      return true;
+    }
+
+    window.renderFrame = renderFrame;
+  </script>
+</body>
+</html>

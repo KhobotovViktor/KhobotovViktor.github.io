@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Aether & Steel: Dark Fantasy Match-3 Tactical RPG</title>
+  <link rel="icon" type="image/png" href="./icons/ui/gold_coin.webp">
+  <style>
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #07080a;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: #e8eaed;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    #app-container {
+      width: 100%;
+      max-width: 460px;
+      height: 100%;
+      max-height: 920px;
+      position: relative;
+      background: #0e0f12;
+      box-shadow: 0 0 30px rgba(0,0,0,0.9);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      touch-action: none;
+    }
+    /* Modal / Dialog Overlay */
+    .modal-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(4px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+      padding: 20px;
+    }
+    .modal-card {
+      background: #16181f;
+      border: 1px solid #c89b3c;
+      border-radius: 14px;
+      padding: 24px;
+      width: 100%;
+      max-width: 360px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+      animation: popIn 0.25s ease-out;
+    }
+    @keyframes popIn {
+      0% { transform: scale(0.9); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      border: none;
+      transition: all 0.15s ease;
+    }
+    .btn-gold {
+      background: #c89b3c;
+      color: #0e0f12;
+    }
+    .btn-gold:hover {
+      background: #dfb356;
+    }
+    .btn-crimson {
+      background: #8b1e1e;
+      color: #fff;
+    }
+    .btn-crimson:hover {
+      background: #a92727;
+    }
+    .btn-dark {
+      background: #1e222b;
+      color: #9aa0a6;
+      border: 1px solid #333845;
+    }
+    .btn-dark:hover {
+      color: #fff;
+      border-color: #c89b3c;
+    }
+  </style>
+  <script type="module" crossorigin src="./assets/index-C4urPcZ_.js"></script>
+</head>
+<body>
+  <div id="app-container">
+    <!-- Main game view injected here -->
+  </div>
+</body>
+</html>

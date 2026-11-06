@@ -3,9 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#0a0910" />
   <title>Aether & Steel: Dark Fantasy Match-3 Tactical RPG</title>
   <link rel="icon" type="image/png" href="./icons/ui/gold_coin.webp">
+  
+  <!-- Local Fonts from Aether & Steel: Dark Fantasy Idle -->
+  <link rel="preload" href="./fonts/RosencrantzNbp.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="preload" href="./fonts/GuildensternNbp.ttf" as="font" type="font/ttf" crossorigin>
+  
+  <!-- Google Fonts: Medieval & Fantasy Fallbacks -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=MedievalSharp&family=Press+Start+2P&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+
   <style>
+    @font-face {
+      font-family: 'Rosencrantz NBP';
+      src: local('Rosencrantz NBP'), url('./fonts/RosencrantzNbp.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Guildenstern NBP';
+      src: local('Guildenstern NBP'), url('./fonts/GuildensternNbp.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+
     * {
       box-sizing: border-box;
       user-select: none;
@@ -13,41 +39,59 @@
       margin: 0;
       padding: 0;
       -webkit-tap-highlight-color: transparent;
+      scrollbar-width: none !important;
     }
+    *::-webkit-scrollbar {
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
+    }
+
     html, body {
       width: 100%;
       height: 100%;
       overflow: hidden;
-      background-color: #07080a;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      color: #e8eaed;
+      background-color: #0a0910;
+      font-family: 'Rosencrantz NBP', 'Rosencrantz', monospace, sans-serif;
+      color: #f4f4f5;
       display: flex;
       justify-content: center;
       align-items: center;
+      letter-spacing: 0.02em;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Guildenstern NBP', 'Guildenstern', monospace, sans-serif;
+      letter-spacing: 0.03em;
+    }
+
     #app-container {
       width: 100%;
       max-width: 460px;
       height: 100%;
       max-height: 920px;
       position: relative;
-      background: #0e0f12;
-      box-shadow: 0 0 30px rgba(0,0,0,0.9);
+      background: #0a0910;
+      box-shadow: 0 0 40px rgba(0,0,0,0.95);
       display: flex;
       flex-direction: column;
       overflow: hidden;
     }
+
     canvas {
       display: block;
       width: 100%;
       height: 100%;
       touch-action: none;
     }
+
     /* Modal / Dialog Overlay */
     .modal-overlay {
       position: absolute;
       inset: 0;
-      background: rgba(0, 0, 0, 0.85);
+      background: rgba(10, 9, 16, 0.9);
       backdrop-filter: blur(4px);
       display: flex;
       justify-content: center;
@@ -56,57 +100,71 @@
       padding: 20px;
     }
     .modal-card {
-      background: #16181f;
-      border: 1px solid #c89b3c;
-      border-radius: 14px;
+      background: #12111d;
+      border: 2px solid #eab308;
+      border-radius: 12px;
       padding: 24px;
       width: 100%;
       max-width: 360px;
       text-align: center;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.9), inset 0 0 15px rgba(234, 179, 8, 0.15);
       animation: popIn 0.25s ease-out;
     }
     @keyframes popIn {
-      0% { transform: scale(0.9); opacity: 0; }
+      0% { transform: scale(0.92); opacity: 0; }
       100% { transform: scale(1); opacity: 1; }
     }
+
     .btn {
-      display: block;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
       width: 100%;
       padding: 12px;
       margin-top: 10px;
       border-radius: 8px;
-      font-size: 14px;
+      font-family: 'Guildenstern NBP', 'Guildenstern', monospace;
+      font-size: 15px;
       font-weight: bold;
       cursor: pointer;
-      border: none;
-      transition: all 0.15s ease;
+      border: 1px solid transparent;
+      box-shadow: inset -2px -2px 0px 0px #000, inset 2px 2px 0px 0px rgba(255,255,255,0.15);
+      transition: all 0.1s ease;
+      touch-action: manipulation;
+    }
+    .btn:active {
+      transform: scale(0.97);
     }
     .btn-gold {
-      background: #c89b3c;
-      color: #0e0f12;
+      background: linear-gradient(180deg, #facc15 0%, #ca8a04 100%);
+      color: #0a0910;
+      border-color: #fef08a;
+      box-shadow: 0 0 12px rgba(234, 179, 8, 0.4), inset -2px -2px 0px 0px #000;
     }
     .btn-gold:hover {
-      background: #dfb356;
+      background: linear-gradient(180deg, #fde047 0%, #eab308 100%);
     }
     .btn-crimson {
-      background: #8b1e1e;
+      background: linear-gradient(180deg, #ef4444 0%, #991b1b 100%);
       color: #fff;
+      border-color: #fca5a5;
+      box-shadow: 0 0 12px rgba(239, 68, 68, 0.4), inset -2px -2px 0px 0px #000;
     }
     .btn-crimson:hover {
-      background: #a92727;
+      background: linear-gradient(180deg, #f87171 0%, #b91c1c 100%);
     }
     .btn-dark {
-      background: #1e222b;
-      color: #9aa0a6;
-      border: 1px solid #333845;
+      background: #1a1829;
+      color: #a1a1aa;
+      border-color: #3b3459;
     }
     .btn-dark:hover {
       color: #fff;
-      border-color: #c89b3c;
+      border-color: #eab308;
     }
   </style>
-  <script type="module" crossorigin src="./assets/index-Br46RF9O.js"></script>
+  <script type="module" crossorigin src="./assets/index-u5bm4vIN.js"></script>
 </head>
 <body>
   <div id="app-container">

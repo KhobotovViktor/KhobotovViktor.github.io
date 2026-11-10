@@ -5,41 +5,67 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Политика конфиденциальности / Privacy Policy — Aether & Steel: Dark Fantasy Idle</title>
   <style>
+    :root {
+      --primary-color: #f59e0b;
+      --bg-color: #0f0d17;
+      --card-bg: #171424;
+      --border-color: #2e2842;
+      --text-main: #e2e8f0;
+      --text-muted: #94a3b8;
+    }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       line-height: 1.65;
-      max-width: 860px;
-      margin: 30px auto;
-      padding: 0 24px;
-      color: #222;
-      background-color: #fafafa;
+      max-width: 900px;
+      margin: 20px auto;
+      padding: 0 20px;
+      color: var(--text-main);
+      background-color: var(--bg-color);
     }
     .lang-switcher {
       display: flex;
-      gap: 12px;
+      flex-wrap: wrap;
+      gap: 8px;
       margin-bottom: 24px;
+      padding: 14px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      position: sticky;
+      top: 10px;
+      z-index: 100;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
     }
     .lang-btn {
-      padding: 6px 14px;
-      background: #eee;
-      border: 1px solid #ccc;
+      padding: 6px 12px;
+      background: #231f36;
+      border: 1px solid #3d355c;
       border-radius: 6px;
       text-decoration: none;
-      color: #111;
+      color: #cbd5e1;
       font-weight: 600;
-      font-size: 14px;
+      font-size: 13px;
+      transition: all 0.2s ease;
     }
-    .lang-btn:hover {
-      background: #ddd;
+    .lang-btn:hover, .lang-btn:focus {
+      background: #f59e0b;
+      color: #000;
+      border-color: #f59e0b;
     }
     h1 {
-      color: #111;
-      border-bottom: 2px solid #e2e8f0;
+      color: #fbbf24;
+      border-bottom: 2px solid var(--border-color);
       padding-bottom: 12px;
+      font-size: 24px;
     }
     h2 {
-      color: #1a202c;
-      margin-top: 28px;
+      color: #f59e0b;
+      margin-top: 26px;
+      font-size: 18px;
+    }
+    p, li {
+      color: #cbd5e1;
+      font-size: 14.5px;
     }
     ul {
       padding-left: 20px;
@@ -48,19 +74,23 @@
       margin-bottom: 6px;
     }
     .card {
-      background: #fff;
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
       padding: 24px;
-      margin-bottom: 30px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      margin-bottom: 35px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
     }
     .contact-box {
-      background: #f0fdf4;
-      border-left: 4px solid #22c55e;
-      padding: 12px 16px;
-      border-radius: 4px;
-      margin-top: 20px;
+      background: rgba(245, 158, 11, 0.08);
+      border-left: 4px solid #f59e0b;
+      padding: 14px 18px;
+      border-radius: 6px;
+      margin-top: 22px;
+    }
+    .contact-box a {
+      color: #fbbf24;
+      text-decoration: underline;
     }
   </style>
 </head>
@@ -69,93 +99,205 @@
   <div class="lang-switcher">
     <a href="#ru" class="lang-btn">🇷🇺 Русский</a>
     <a href="#en" class="lang-btn">🇬🇧 English</a>
+    <a href="#de" class="lang-btn">🇩🇪 Deutsch</a>
+    <a href="#es" class="lang-btn">🇪🇸 Español</a>
+    <a href="#fr" class="lang-btn">🇫🇷 Français</a>
+    <a href="#zh" class="lang-btn">🇨🇳 简体中文</a>
+    <a href="#zht" class="lang-btn">🇹🇼 繁體中文</a>
+    <a href="#ja" class="lang-btn">🇯🇵 日本語</a>
+    <a href="#ko" class="lang-btn">🇰🇷 한국어</a>
+    <a href="#pl" class="lang-btn">🇵🇱 Polski</a>
+    <a href="#pt" class="lang-btn">🇧🇷 Português</a>
   </div>
 
-  <!-- РУССКАЯ ВЕРСИЯ -->
+  <!-- РУССКИЙ -->
   <div id="ru" class="card">
     <h1>Политика конфиденциальности</h1>
-    <p><em>Дата последнего обновления: 3 ноября 2026 г.</em></p>
-    <p>Настоящая Политика конфиденциальности описывает порядок сбора, использования и раскрытия информации при использовании мобильной игры <strong>«Aether & Steel: Dark Fantasy Idle»</strong> (далее — «Игра»), разработанной индивидуальным предпринимателем <strong>Сорокина Алеся Викторовна (AV Tech)</strong>.</p>
+    <p><em>Дата последнего обновления: 10 ноября 2026 г.</em></p>
+    <p>Настоящая Политика конфиденциальности описывает порядок сбора, использования и защиты информации при использовании мобильной игры <strong>«Aether & Steel: Dark Fantasy Idle»</strong> (далее — «Игра»), разработанной индивидуальным предпринимателем <strong>Сорокина Алеся Викторовна (AV Tech)</strong>.</p>
 
-    <h2>1. Сбор и обработка персональных данных</h2>
-    <p>Мы уважаем право пользователей на конфиденциальность. Игра разработана по принципу минимизации данных:</p>
+    <h2>1. Сбор и обработка данных</h2>
+    <p>Мы соблюдаем принцип минимизации собираемых данных:</p>
     <ul>
-      <li>Игра <strong>не требует регистрации аккаунта</strong> и <strong>не собирает</strong> персональные данные, позволяющие напрямую идентифицировать личность (такие как ФИО, домашний адрес, номер телефона или список контактов).</li>
-      <li>Игровой прогресс, настройки и достижения сохраняются <strong>локально на устройстве пользователя</strong> (через встроенное хранилище браузера/WebView или локальную файловую систему) либо анонимно синхронизируются через облачные сервисы авторизации по согласию пользователя.</li>
+      <li>Игра <strong>не требует обязательной регистрации</strong> и <strong>не собирает</strong> персональные данные прямого доступа (паспортные данные, адрес, список контактов, телефонные номера).</li>
+      <li>Игровой прогресс сохраняется локально на устройстве либо анонимно синхронизируется с облачной базой Supabase при входе пользователя.</li>
+      <li><strong>Служба обратной связи и тикеты:</strong> При отправке обращения через встроенную форму «Служба поддержки» пользователь может добровольно указать контактные данные (Email или Telegram @username) исключительно для получения ответа разработчика. Техническая диагностика (версия игры, этаж, модель устройства) собирается исключительно для воспроизведения и устранения ошибок.</li>
     </ul>
 
-    <h2>2. Идентификаторы устройств и сторонние сервисы</h2>
-    <p>Для обеспечения работы внутриигровой монетизации и показа рекламы Игра взаимодействует со сторонними сервисами и SDK, которые могут обрабатывать обезличенные технические идентификаторы:</p>
+    <h2>2. Сторонние сервисы и реклама</h2>
     <ul>
-      <li><strong>Рекламные сервисы (Яндекс РСЯ / Yandex Mobile Ads, VK Ads / myTarget, Huawei Petal Ads):</strong>
-        Могут собирать анонимные рекламные идентификаторы устройства (Google Advertising ID / Android AD_ID, Huawei Open Advertising ID / OAID), IP-адрес, тип и модель устройства, версию ОС и сетевые параметры исключительно для показа релевантной рекламы с вознаграждением (Rewarded Ads), предотвращения мошенничества и аналитики эффективности рекламных кампаний.
-      </li>
-      <li><strong>Платежные сервисы (RuStore In-App Purchases / RuStore Pay):</strong>
-        Используются для проведения платежей за внутриигровые товары и кристаллы. Все финансовые транзакции обрабатываются на защищенных шлюзах RuStore; Игра не получает и не сохраняет данные банковских карт пользователей.
-      </li>
+      <li><strong>Рекламные сервисы (Yandex Mobile Ads, VK Ads, Huawei Petal Ads):</strong> могут обрабатывать обезличенные рекламные идентификаторы (OAID / AD_ID) исключительно для показа видеорекламы с вознаграждением по инициативе игрока.</li>
+      <li><strong>Платежи (RuStore In-App Purchases / AppGallery IAP):</strong> все финансовые транзакции обрабатываются на стороне защищенных платежных шлюзов магазинов; Игра не имеет доступа к данным банковских карт.</li>
     </ul>
 
-    <h2>3. Соответствие требованиям Huawei AppGallery и RuStore</h2>
-    <p>Приложение полностью соблюдает политики магазинов приложений в отношении приватности:</p>
-    <ul>
-      <li>Сбор рекламных идентификаторов (OAID / AD_ID) осуществляется строго с учётом системных настроек устройства («Ограничить отслеживание рекламы»).</li>
-      <li>Рекламные идентификаторы не связываются с постоянными аппаратными номерами устройства (IMEI, MAC-адрес) и не используются для персонального профилирования без согласия.</li>
-    </ul>
-
-    <h2>4. Конфиденциальность детей</h2>
-    <p>Игра не предназначена для целенаправленного сбора данных детей в возрасте до 13 лет (или минимального возраста согласия согласно законодательству вашей юрисдикции).</p>
-
-    <h2>5. Права пользователя и управление данными</h2>
-    <p>Вы можете сбросить или ограничить использование вашего рекламного идентификатора в любой момент в настройках вашего устройства Android / EMUI / HarmonyOS (<em>Настройки → Конфиденциальность → Реклама → Сбросить рекламный идентификатор</em>).</p>
+    <h2>3. Права пользователя и удаление данных</h2>
+    <p>Пользователь имеет право запросить удаление своего аккаунта и связанных данных сохранения в любой момент, направив запрос на контактный email.</p>
 
     <div class="contact-box">
       <strong>Контакты разработчика:</strong><br>
       Разработчик: ИП Сорокина Алеся Викторовна (AV Tech)<br>
-      Электронная почта: <a href="mailto:asorokina957@gmail.com">asorokina957@gmail.com</a>
+      Электронная почта: <a href="mailto:asorokina857@gmail.com">asorokina857@gmail.com</a>
     </div>
   </div>
 
-  <!-- АНГЛИЙСКАЯ ВЕРСИЯ -->
+  <!-- ENGLISH -->
   <div id="en" class="card">
     <h1>Privacy Policy</h1>
-    <p><em>Last updated: November 3, 2026</em></p>
-    <p>This Privacy Policy describes our policies and procedures on the collection, use, and disclosure of information when you use the mobile game <strong>"Aether & Steel: Dark Fantasy Idle"</strong> ("the Game"), developed by <strong>AV Tech (Individual Entrepreneur Sorokina Alesya Viktorovna)</strong>.</p>
+    <p><em>Last updated: November 10, 2026</em></p>
+    <p>This Privacy Policy describes how <strong>AV Tech (Individual Entrepreneur Sorokina Alesya Viktorovna)</strong> collects, uses, and safeguards information when you play <strong>"Aether & Steel: Dark Fantasy Idle"</strong> ("the Game").</p>
 
-    <h2>1. Information Collection and Storage</h2>
-    <p>We believe in user privacy and data minimization:</p>
+    <h2>1. Information Collection & Data Minimization</h2>
     <ul>
-      <li>The Game <strong>does not require account registration</strong> and <strong>does not collect</strong> direct personal identifiable information (such as real name, physical address, email, telephone number, or address book contacts).</li>
-      <li>Game progress, inventory, character attributes, and player settings are stored <strong>locally on the user's device</strong> (via WebView local storage/filesystem) or anonymously synchronized with cloud storage upon player request.</li>
+      <li>The Game <strong>does not require mandatory registration</strong> and <strong>does not collect</strong> direct personal identifiers (such as physical address, phone number, or address book contacts).</li>
+      <li>Game progress is stored locally on your device or anonymously synchronized via secure cloud storage upon player login.</li>
+      <li><strong>In-game Support Tickets:</strong> When submitting an issue via the in-game support form, users may voluntarily provide contact details (Email or Telegram @username) solely for developer follow-up. Technical diagnostics (game version, floor, device model) are processed solely for debugging and performance fixes.</li>
     </ul>
 
-    <h2>2. Third-Party Services and Device Identifiers</h2>
-    <p>The Game integrates certified third-party SDKs for optional rewarded video advertising and in-app purchases. These services may collect pseudonymous and technical identifiers:</p>
+    <h2>2. Third-Party Services & Monetization</h2>
     <ul>
-      <li><strong>Advertising Partners (Yandex Mobile Ads, VK Ads / myTarget, Huawei Petal Ads):</strong>
-        May process non-permanent device identifiers (Android Advertising ID / AD_ID, Huawei Open Advertising ID / OAID), IP address, device model, operating system version, and approximate network information strictly for the purpose of serving optional rewarded ads, verifying reward delivery, fraud prevention, and frequency capping.
-      </li>
-      <li><strong>In-App Purchases (RuStore Pay SDK):</strong>
-        Used for secure in-game store purchases. All payment transactions are processed securely by RuStore payment gateways. The Game does not process or retain any payment card details.
-      </li>
+      <li><strong>Advertising Partners (Yandex Mobile Ads, VK Ads, Huawei Petal Ads):</strong> May process pseudonymous identifiers (OAID / AD_ID) solely for rewarded ad verification and frequency capping.</li>
+      <li><strong>In-App Purchases (RuStore Pay, Huawei IAP):</strong> Handled securely by official platform stores. The Game never processes or stores financial credentials.</li>
     </ul>
-
-    <h2>3. Compliance with Huawei AppGallery and App Store Guidelines</h2>
-    <p>The Game strictly adheres to AppGallery and mobile ecosystem privacy standards:</p>
-    <ul>
-      <li>Advertising identifiers (OAID / AD_ID) are processed respecting system-level settings (e.g., "Limit Ad Tracking" / Personalized Ads toggle).</li>
-      <li>No device identifiers are linked to persistent hardware identifiers (IMEI, SN, MAC address) or user identities.</li>
-    </ul>
-
-    <h2>4. Children's Privacy</h2>
-    <p>The Game does not knowingly collect or solicit any personal information from children under the age of 13.</p>
-
-    <h2>5. User Rights and Controls</h2>
-    <p>You can manage, reset, or restrict the use of your advertising identifier at any time via your device settings (<em>Settings → Privacy → Ads / Advertising → Reset Advertising ID</em>).</p>
 
     <div class="contact-box">
       <strong>Contact Us:</strong><br>
       Developer: AV Tech (IE Sorokina Alesya Viktorovna)<br>
-      Email: <a href="mailto:asorokina957@gmail.com">asorokina957@gmail.com</a>
+      Email: <a href="mailto:asorokina857@gmail.com">asorokina857@gmail.com</a>
+    </div>
+  </div>
+
+  <!-- DEUTSCH -->
+  <div id="de" class="card">
+    <h1>Datenschutzerklärung</h1>
+    <p><em>Zuletzt aktualisiert: 10. November 2026</em></p>
+    <p>Diese Datenschutzerklärung beschreibt die Erhebung und Verwendung von Informationen beim Spielen von <strong>„Aether & Steel: Dark Fantasy Idle“</strong> durch <strong>AV Tech (Sorokina Alesya Viktorovna)</strong>.</p>
+    <h2>1. Datenerhebung und Support-Tickets</h2>
+    <p>Das Spiel erfordert keine Registrierung. Spielfortschritte werden lokal oder optional in der Cloud gespeichert. Beim Einreichen eines Support-Tickets können Kontaktdaten freiwillig angegeben werden, um eine Rückmeldung der Entwickler zu erhalten.</p>
+    <h2>2. Drittanbieter & Werbedienste</h2>
+    <p>Pseudonyme Werbe-IDs (OAID/AD_ID) werden ausschließlich für optionale Belohnungsvideos verwendet. Zahlungen werden sicher über offizielle App-Stores abgewickelt.</p>
+    <div class="contact-box">
+      <strong>Kontakt:</strong><br>
+      E-Mail: <a href="mailto:asorokina857@gmail.com">asorokina857@gmail.com</a>
+    </div>
+  </div>
+
+  <!-- ESPAÑOL -->
+  <div id="es" class="card">
+    <h1>Política de Privacidad</h1>
+    <p><em>Última actualización: 10 de noviembre de 2026</em></p>
+    <p>Esta Política de Privacidad rige el uso del juego <strong>"Aether & Steel: Dark Fantasy Idle"</strong>, desarrollado por <strong>AV Tech (Sorokina Alesya Viktorovna)</strong>.</p>
+    <h2>1. Recopilación de datos y Soporte</h2>
+    <p>No recopilamos información personal identificable directa. Al enviar un ticket de soporte, el usuario puede proporcionar voluntariamente su contacto para recibir asistencia técnica.</p>
+    <h2>2. Pagos y Publicidad</h2>
+    <p>Los identificadores publicitarios (OAID / AD_ID) se usan solo para recompensas opcionales en video. Todos los pagos se procesan de forma segura en las tiendas oficiales.</p>
+    <div class="contact-box">
+      <strong>Contacto:</strong><br>
+      Correo electrónico: <a href="mailto:asorokina857@gmail.com">asorokina857@gmail.com</a>
+    </div>
+  </div>
+
+  <!-- FRANÇAIS -->
+  <div id="fr" class="card">
+    <h1>Politique de Confidentialité</h1>
+    <p><em>Dernière mise à jour : 10 novembre 2026</em></p>
+    <p>Cette politique décrit la gestion des données pour le jeu <strong>"Aether & Steel: Dark Fantasy Idle"</strong>, développé par <strong>AV Tech (Sorokina Alesya Viktorovna)</strong>.</p>
+    <h2>1. Collecte et Tickets d'assistance</h2>
+    <p>Le jeu ne nécessite aucune inscription préalable. Les données de contact fournies dans les tickets de support sont strictement utilisées pour répondre aux demandes d'assistance.</p>
+    <h2>2. Services tiers</h2>
+    <p>Les identifiants publicitaires anonymes sont limités aux vidéos avec récompense. Les paiements sont sécurisés par les plateformes de téléchargement.</p>
+    <div class="contact-box">
+      <strong>Contact :</strong><br>
+      E-mail : <a href="mailto:asorokina857@gmail.com">asorokina857@gmail.com</a>
+    </div>
+  </div>
+
+  <!-- 简体中文 -->
+  <div id="zh" class="card">
+    <h1>隐私政策</h1>
+    <p><em>最后更新日期：2026年11月10日</em></p>
+    <p>本隐私政策说明了 <strong>AV Tech (Sorokina Alesya Viktorovna)</strong> 在您游玩 <strong>《Aether & Steel: Dark Fantasy Idle》</strong> 时如何收集与处理信息。</p>
+    <h2>1. 数据收集与客服工单</h2>
+    <p>本游戏无需强制注册账号，不收集姓名、通讯录等敏感个人信息。游戏内提交工单时填写的联系方式仅用于技术支持回复。</p>
+    <h2>2. 第三方广告与支付</h2>
+    <p>广告标识符（OAID / AD_ID）仅用于激励视频广告验证。所有内购均由官方应用商店安全处理，游戏不接触银行卡信息。</p>
+    <div class="contact-box">
+      <strong>开发者联系方式：</strong><br>
+      电子邮箱：<a href="mailto:asorokina857@gmail.com">asorokina857@gmail.com</a>
+    </div>
+  </div>
+
+  <!-- 繁體中文 -->
+  <div id="zht" class="card">
+    <h1>隱私權政策</h1>
+    <p><em>最後更新日期：2026年11月10日</em></p>
+    <p>本隱私權政策適用於 <strong>AV Tech (Sorokina Alesya Viktorovna)</strong> 所開發的 <strong>《Aether & Steel: Dark Fantasy Idle》</strong>。</p>
+    <h2>1. 資料收集與客服工單</h2>
+    <p>本遊戲不強制註冊帳號，不收集電話與聯絡人等隱私資訊。提交客服問題時填寫之聯絡資訊僅用於技術解答。</p>
+    <h2>2. 第三方服務</h2>
+    <p>匿名廣告識別碼僅用於獎勵廣告發放，商店付款全權由官方平台安全代收代付。</p>
+    <div class="contact-box">
+      <strong>聯絡我們：</strong><br>
+      電子郵件：<a href="mailto:asorokina857@gmail.com">asorokina857@gmail.com</a>
+    </div>
+  </div>
+
+  <!-- 日本語 -->
+  <div id="ja" class="card">
+    <h1>プライバシーポリシー</h1>
+    <p><em>最終更新日：2026年11月10日</em></p>
+    <p><strong>AV Tech (Sorokina Alesya Viktorovna)</strong> が提供するゲーム <strong>「Aether & Steel: Dark Fantasy Idle」</strong> のプライバシーポリシーです。</p>
+    <h2>1. 情報の収集とお問い合わせ</h2>
+    <p>アカウント登録は必須ではなく、個人を直接特定する情報は収集いたしません。サポート窓口でお送りいただいた連絡先は返信対応のみに使用されます。</p>
+    <h2>2. 広告および決済</h2>
+    <p>広告識別子（OAID/AD_ID）はリワード動画の提供にのみ利用されます。課金決済は各公式ストア経由で安全に行われます。</p>
+    <div class="contact-box">
+      <strong>お問い合わせ：</strong><br>
+      メールアドレス：<a href="mailto:asorokina857@gmail.com">asorokina857@gmail.com</a>
+    </div>
+  </div>
+
+  <!-- 한국어 -->
+  <div id="ko" class="card">
+    <h1>개인정보 처리방침</h1>
+    <p><em>최종 업데이트: 2026년 11월 10일</em></p>
+    <p>본 방침은 <strong>AV Tech (Sorokina Alesya Viktorovna)</strong>의 모바일 게임 <strong>"Aether & Steel: Dark Fantasy Idle"</strong>에 적용됩니다.</p>
+    <h2>1. 정보 수집 및 고객지원</h2>
+    <p>본 게임은 회원가입을 필수로 요구하지 않으며 개인 식별 정보를 수집하지 않습니다. 고객지원 문의 시 기재한 연락처는 답변 용도로만 활용됩니다.</p>
+    <h2>2. 광고 및 결제 안내</h2>
+    <p>광고 식별자는 보상형 광고 검증에만 한정하여 사용되며 모든 결제는 공인 앱 마켓을 통해 안전하게 처리됩니다.</p>
+    <div class="contact-box">
+      <strong>개발자 문의:</strong><br>
+      이메일: <a href="mailto:asorokina857@gmail.com">asorokina857@gmail.com</a>
+    </div>
+  </div>
+
+  <!-- POLSKI -->
+  <div id="pl" class="card">
+    <h1>Polityka Prywatności</h1>
+    <p><em>Ostatnia aktualizacja: 10 listopada 2026</em></p>
+    <p>Niniejsza Polityka Prywatności dotyczy gry <strong>"Aether & Steel: Dark Fantasy Idle"</strong> stworzonej przez <strong>AV Tech (Sorokina Alesya Viktorovna)</strong>.</p>
+    <h2>1. Gromadzenie danych i Wsparcie</h2>
+    <p>Gra nie wymaga rejestracji konta i minimalizuje przetwarzane dane. Dane kontaktowe przekazane w zgłoszeniu błędu służą wyłącznie do udzielenia odpowiedzi.</p>
+    <h2>2. Partnerzy i Płatności</h2>
+    <p>Identyfikatory reklamowe (OAID/AD_ID) służą wyłącznie do weryfikacji nagród za reklamy. Płatności są obsługiwane bezpiecznie przez oficjalne sklepy.</p>
+    <div class="contact-box">
+      <strong>Kontakt:</strong><br>
+      E-mail: <a href="mailto:asorokina857@gmail.com">asorokina857@gmail.com</a>
+    </div>
+  </div>
+
+  <!-- PORTUGUÊS -->
+  <div id="pt" class="card">
+    <h1>Política de Privacidade</h1>
+    <p><em>Última atualização: 10 de novembro de 2026</em></p>
+    <p>Esta Política de Privacidade descreve as práticas de <strong>AV Tech (Sorokina Alesya Viktorovna)</strong> no jogo <strong>"Aether & Steel: Dark Fantasy Idle"</strong>.</p>
+    <h2>1. Coleta de Dados e Suporte</h2>
+    <p>O jogo não exige cadastro obrigatório. Os dados informados nos tickets de suporte são utilizados exclusivamente para responder às solicitações dos jogadores.</p>
+    <h2>2. Monetização e Pagamentos</h2>
+    <p>Identificadores de publicidade anônimos são utilizados apenas para anúncios com recompensa. Pagamentos são processados com segurança pelas lojas oficiais.</p>
+    <div class="contact-box">
+      <strong>Contato:</strong><br>
+      E-mail: <a href="mailto:asorokina857@gmail.com">asorokina857@gmail.com</a>
     </div>
   </div>
 

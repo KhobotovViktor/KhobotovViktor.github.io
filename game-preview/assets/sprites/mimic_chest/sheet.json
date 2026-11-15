@@ -1,0 +1,20 @@
+{
+  "entity": "mimic_chest",
+  "totalFrames": 216,
+  "fps": 21.6,
+  "cellWidth": 250,
+  "cellHeight": 200,
+  "cols": 8,
+  "rowsPerSheet": 9,
+  "framesPerSheet": 72,
+  "sheets": [
+    "attack_sheet_0.webp",
+    "attack_sheet_1.webp",
+    "attack_sheet_2.webp"
+  ],
+  "sheetSizesKB": [
+    1550.0,
+    1564.4,
+    1111.3
+  ]
+}

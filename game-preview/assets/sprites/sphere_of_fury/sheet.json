@@ -1,0 +1,17 @@
+{
+  "entity": "sphere_of_fury",
+  "totalFrames": 96,
+  "fps": 24.0,
+  "cellWidth": 250,
+  "cellHeight": 150,
+  "cols": 8,
+  "rowsPerSheet": 12,
+  "framesPerSheet": 96,
+  "sheets": [
+    "attack_sheet_0.webp"
+  ],
+  "sheetSizesKB": [
+    1714.3
+  ],
+  "orbCenterXRatio": 0.341
+}

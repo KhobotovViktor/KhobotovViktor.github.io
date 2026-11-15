@@ -1,0 +1,20 @@
+{
+  "entity": "treasure_goblin",
+  "totalFrames": 180,
+  "fps": 18.0,
+  "cellWidth": 336,
+  "cellHeight": 200,
+  "cols": 6,
+  "rowsPerSheet": 10,
+  "framesPerSheet": 60,
+  "sheets": [
+    "attack_sheet_0.webp",
+    "attack_sheet_1.webp",
+    "attack_sheet_2.webp"
+  ],
+  "sheetSizesKB": [
+    876.0,
+    798.2,
+    1012.8
+  ]
+}

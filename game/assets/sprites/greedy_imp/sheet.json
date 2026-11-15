@@ -1,0 +1,20 @@
+{
+  "entity": "greedy_imp",
+  "totalFrames": 210,
+  "fps": 21.0,
+  "cellWidth": 280,
+  "cellHeight": 200,
+  "cols": 7,
+  "rowsPerSheet": 10,
+  "framesPerSheet": 70,
+  "sheets": [
+    "attack_sheet_0.webp",
+    "attack_sheet_1.webp",
+    "attack_sheet_2.webp"
+  ],
+  "sheetSizesKB": [
+    611.9,
+    823.9,
+    937.9
+  ]
+}

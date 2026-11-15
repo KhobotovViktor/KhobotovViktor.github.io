@@ -1,0 +1,17 @@
+{
+  "entity": "sphere_of_wealth",
+  "totalFrames": 96,
+  "fps": 24.0,
+  "cellWidth": 248,
+  "cellHeight": 152,
+  "cols": 8,
+  "rowsPerSheet": 12,
+  "framesPerSheet": 96,
+  "sheets": [
+    "attack_sheet_0.webp"
+  ],
+  "sheetSizesKB": [
+    1831.1
+  ],
+  "orbCenterXRatio": 0.3
+}

@@ -1,0 +1,17 @@
+{
+  "entity": "sphere_of_freezing",
+  "totalFrames": 96,
+  "fps": 24.0,
+  "cellWidth": 256,
+  "cellHeight": 148,
+  "cols": 8,
+  "rowsPerSheet": 12,
+  "framesPerSheet": 96,
+  "sheets": [
+    "attack_sheet_0.webp"
+  ],
+  "sheetSizesKB": [
+    1869.9
+  ],
+  "orbCenterXRatio": 0.386
+}

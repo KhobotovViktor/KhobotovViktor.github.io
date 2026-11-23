@@ -1,0 +1,1 @@
+import{r as u}from"./vendor-react-C60VTYGl.js";function d(e,t){const r=u.useRef(t);r.current=t,u.useEffect(()=>{if(!e||typeof window>"u")return;const n=o=>{o.defaultPrevented||(o.preventDefault(),r.current())};return window.addEventListener("app:close-submodal",n),()=>{window.removeEventListener("app:close-submodal",n)}},[e])}export{d as u};

@@ -1,1 +1,0 @@
-import{j as e}from"./vendor-react-C60VTYGl.js";import{A as i}from"./useGameStore-BklaWVyt.js";const a=({size:o=14,className:t="",style:n})=>e.jsx("img",{src:i.ui.goldCoin,alt:"Gold",className:`inline-block object-contain shrink-0 drop-shadow select-none pointer-events-none ${t}`,style:{width:`${o}px`,height:`${o}px`,maxWidth:`${o}px`,maxHeight:`${o}px`,...n}});export{a as G};
